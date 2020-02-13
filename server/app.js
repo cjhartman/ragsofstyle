@@ -10,9 +10,9 @@ app.use(cors())
 
 const port = 3000;
  
-app.get("/status", (req, res) => {
+app.post("/register", (req, res) => {
  res.send({
-     message: "Hello World!"
+     message: `You have been registered with ${req.body.email}`
  });
 });
 
