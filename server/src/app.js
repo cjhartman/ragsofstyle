@@ -11,7 +11,7 @@ app.use(morgan('combined'));
 app.use(bodyParser.json());
 app.use(cors());
 
-require('./routes/routes')(app)
+// require('./routes/routes')(app)
 
 // Port to listen on
 app.listen(process.env.PORT || 3000)
@@ -20,12 +20,18 @@ app.listen(process.env.PORT || 3000)
 //     return res.send("<h1>Hello world</h1>");
 // });
 
+const users = require('./routes/api/users');
+app.use('/api/users', users);
+
 // Bring in DB config
 // Setting up mongo
 const db = require('./config/keys').mongoURI;;
 mongoose.Promise = global.Promise;
 mongoose.connect(db, 
-    { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true }
+    { 
+        useUnifiedTopology: true, 
+        useNewUrlParser: true, 
+        useCreateIndex: true }
 ).then(() => {
     console.log(`Database connected successfully ${db}`)
 }).catch(err => {
