@@ -112,4 +112,18 @@ router.post('/login', (req, res) => {
     })
 });
 
+
+/**
+ * @route POST api/users/profile
+ * @desc Return the User's data
+ * @acces Private
+ */
+router.get('/profile', passport.authenticate('jwt', { 
+    session: false
+}), (req, res) => {
+    return res.json({
+        user: req.user
+    });
+});
+
 module.exports = router;
