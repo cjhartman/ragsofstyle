@@ -1,24 +1,24 @@
 <template>
-    <div>
-        <h1>Register</h1>
+  <div>
+      <h1>Register</h1>
 
-        <input
-            type="email"
-            name="email"
-            v-model="email"
-            placeholder="Email"
-        />
-        <input
-            type="password"
-            name="password"
-            v-model="password"
-            placeholder="Password"
-        />
-        <button
-          @click="register()">
-            Register
-        </button>
-    </div>
+      <input
+          type="email"
+          name="email"
+          v-model="email"
+          placeholder="Email"
+      />
+      <input
+          type="password"
+          name="password"
+          v-model="password"
+          placeholder="Password"
+      />
+      <button
+        @click="register()">
+          Register
+      </button>
+  </div>
 </template>
 
 <script>
