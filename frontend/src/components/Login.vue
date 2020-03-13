@@ -1,26 +1,35 @@
 <template>
-    <div>
-        <h1>Account Login</h1>
+    <div class="container">
         <section class="login-container">
+            <div class="login-header">
+                <h1>Welcome Back</h1>
+                <h4>Please login with your username & password</h4>
+            </div>
             <div class="login-form">
                 <form>
                     <div class=form-group>
-                        <label for="username" class="form-label">Username</label>
-                        <input
-                            type="text"
-                            placeholder="Username"
-                            name="username"
-                            v-model="username"
-                            class="form"
-                        >
-                        <label for="password" class="form-label">Input your password</label>
-                        <input
-                            type="text"
-                            placeholder="Password"
-                            name="password"
-                            v-model="username"
-                            class="form"
-                        >
+                        <div class="username-form">
+                            <input
+                                type="text"
+                                placeholder="Username"
+                                name="username"
+                                v-model="username"
+                                class="form"
+                            >
+                        </div>
+                        <div class="password-form">
+                            <input
+                                type="password"
+                                placeholder="Password"
+                                name="password"
+                                v-model="password"
+                                class="form"
+                            >
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <a href="#" class="reset-link">Reset Password</a>
+                        <button type="submit" class="login-button">Login</button>
                     </div>
                 </form>
             </div>
@@ -40,17 +49,67 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.login-container {
+.container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fec23b;
 
-    .form-group {
-        display: inline-block;
-        width: 20rem;
-    }
-    .form, .form-label {
-        width: 100%;
-        display: block;
-        text-align: left;
+    .login-container {
+        .login-header {
+            margin-bottom: 35px;
+        }
+
+        .form-group {
+            display: inline-block;
+            width: 20rem;
+
+            .username-form {
+                margin-bottom: 10px;
+            }
+
+            .form {
+                width: 100%;
+                display: block;
+                text-align: left;
+                border-radius: 5px;
+                border: 1px solid gray;
+                padding: 10px;
+                outline: none;
+                font-size: 1em;
+                background-color: transparent;
+                color: #f26f63;
+
+                &:focus {
+                    box-shadow: 0 0 5px #f26f63;
+                    padding: 10px;
+                    border: 1px solid #f26f63;
+                }
+            }
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+
+            .login-button {
+                border-radius: 5px;
+                border: 1px solid gray;
+                background-color: transparent;
+                outline: none;
+                cursor: pointer;
+                padding: 7px;
+            }
+
+            .reset-link {
+                font-size: .9rem;
+                color: #f26f63;
+                text-decoration: none;
+                cursor: pointer;
+            }
+        }
     }
 }
-
 </style>
