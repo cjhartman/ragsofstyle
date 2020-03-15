@@ -6,7 +6,7 @@
                 <h4>Please login with your username & password</h4>
             </div>
             <div class="login-form">
-                <form>
+                <form @submit.prevent="loginUser">
                     <div class=form-group>
                         <div class="username-form">
                             <input
@@ -38,11 +38,28 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   data () {
     return {
       username: '',
       password: ''
+    }
+  },
+  methods: {
+    ...mapActions(['login']),
+    loginUser () {
+      let user = {
+        username: this.username,
+        password: this.password
+      }
+      this.login(user).then(res => {
+        if (res.data.success) {
+          this.$router.push('/admin')
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
 }

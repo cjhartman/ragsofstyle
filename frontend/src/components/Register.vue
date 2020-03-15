@@ -1,23 +1,30 @@
 <template>
   <div>
       <h1>Register</h1>
-
-      <input
+      <form>
+        <input
           type="email"
           name="email"
           v-model="email"
           placeholder="Email"
-      />
-      <input
+        />
+        <input
           type="password"
           name="password"
           v-model="password"
           placeholder="Password"
-      />
-      <button
-        @click="register()">
-          Register
-      </button>
+        />
+        <input
+          type="password"
+          name="confirm_password"
+          v-model="password"
+          placeholder="Confirm Password"
+        />
+        <button
+          @click="register()">
+            Register
+        </button>
+      </form>
   </div>
 </template>
 
@@ -27,7 +34,8 @@ export default {
   data () {
     return {
       email: '',
-      password: ''
+      password: '',
+      confirm_password: ''
     }
   },
   methods: {
