@@ -78,7 +78,7 @@ router.post('/login', (req, res) => {
     User.findOne({ username: req.body.username }).then(user => {
         if (!user) {
             return res.status(404).json({
-                msg: "Useranme is not found",
+                msg: "Username is not found",
                 success: false
             });
         }
@@ -98,6 +98,7 @@ router.post('/login', (req, res) => {
                 }, (err, token) => {
                     res.status(200).json({
                         success: true,
+                        user: user,
                         token: `Bearer ${token}`,
                         msg: 'You are now logged in'
                     })

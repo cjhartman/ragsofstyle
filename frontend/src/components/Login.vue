@@ -26,10 +26,10 @@
                                 class="form"
                             >
                         </div>
-                    </div>
-                    <div class="button-group">
-                        <a href="#" class="reset-link">Reset Password</a>
-                        <button type="submit" class="login-button">Login</button>
+                        <div class="button-group">
+                            <a href="#" class="reset-link">Reset Password</a>
+                            <button type="submit" class="login-button">Login</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -94,7 +94,7 @@ export default {
                 border: 1px solid gray;
                 padding: 10px;
                 outline: none;
-                font-size: 1em;
+                font-size: 1rem;
                 background-color: transparent;
                 color: #f26f63;
 

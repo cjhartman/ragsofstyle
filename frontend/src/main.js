@@ -14,14 +14,12 @@ const token = localStorage.getItem('token')
 
 // if there is a token then append defaul axios auth headers
 if (token) {
-  Vue.protoype.$http.defaults.headers.common['Authorization'] = token
+  Vue.prototype.$http.defaults.headers.common['Authorization'] = token
 }
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
   router,
   store,
-  components: { App },
-  template: '<App/>'
-})
+  render: h => h(App)
+}).$mount('#app')
