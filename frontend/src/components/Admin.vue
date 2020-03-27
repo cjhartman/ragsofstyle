@@ -1,8 +1,11 @@
 <template>
-    <div class="admin-container">
+    <div class="admin-container" v-if="isLoggedIn">
       <header>
         <h1>Admin</h1>
-        <h4><a to="/logout">Logout</a></h4>
+        <div>
+          {{ user.name }}
+          <h4><a to="/logout" @click.prevent="logoutUser">Logout</a></h4>
+        </div>
       </header>
       <div class="upload-container">
         <form class="upload-form-group">
@@ -23,7 +26,7 @@
           </select>
           <label for="image">Select the image you are looking for</label>
           <select name="image" id="image" type="select">
-            <option v-for="image in images" :key="image.id"></option>
+            <!-- <option v-for="image in images" :key="image.id"></option> -->
           </select>
           <div class="upload-button">
            <button type="submit">Upload</button>
@@ -34,10 +37,25 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   computed: {
-    ...mapGetters(['isLoggedIn'])
+    ...mapGetters([
+      'isLoggedIn',
+      'user'
+    ])
+  },
+  methods: {
+    ...mapActions([
+      'logout',
+      'getAdminProfile'
+    ]),
+    logoutUser () {
+      this.logout()
+    }
+  },
+  created () {
+    this.getAdminProfile()
   }
 }
 </script>
@@ -62,15 +80,15 @@ export default {
     label {
       font-size: 18px;
     }
-    
-    label, 
+
+    label,
     input,
     select {
       width: 50vw;
       margin: 10px;
       padding: 5px;
       display: block;
-    } 
+    }
 
     button {
       width: 20vw;
