@@ -13,8 +13,6 @@
           <div class="input-content-items">
             <label for="title">Title</label>
             <input name="title" id="title" type="text" maxlength="30"/>
-            <label for="description">Description</label>
-            <input name="description" id="description" type="text" maxlength="75"/>
             <label for="color">Color</label>
             <input name="color" id="color" type="text" maxlength="75"/>
             <label for="description">Price</label>
@@ -28,11 +26,11 @@
               <option>XL</option>
               <option>XXL</option>
             </select>
+            <label for="description">Description</label>
+            <textarea name="description" id="description" type="text" maxlength="150"/>
           </div>
-          <div>
-            <div class="button-container">
-              <button type="submit" class="get-photos-button" @click.prevent="search">Get Photos</button>
-            </div>
+          <div class="input-content-images">
+            <p>Select the images associated with your item</p>
             <p v-if="loading">
               Loading...
             </p>
@@ -43,7 +41,7 @@
             </ul>
           </div>
         </div>
-        <div class="upload-button">
+        <div class="button-container">
           <button type="submit">Upload</button>
         </div>
       </form>
@@ -86,6 +84,9 @@ export default {
   },
   created () {
     this.getAdminProfile()
+  },
+  beforeMount () {
+    this.fetchImages()
   }
 }
 </script>
@@ -101,6 +102,8 @@ export default {
 
     .admin-header-right {
       display: flex;
+      align-items: center;
+
       h4:first-child {
         padding-right: 10px;
       }
@@ -108,16 +111,40 @@ export default {
   }
 
   .admin-content {
+    margin-bottom: 20px;
+
     .input-content {
+      border-bottom: 3px solid black;
+      margin-bottom: 20px;
+
       &-items {
         margin-bottom: 20px;
 
         label,
         input,
-        select {
+        select,
+        textarea {
           width: 100%;
           display: block;
           padding: 10px 0;
+        }
+
+        input,
+        select,
+        textarea {
+          border: 3px solid black;
+          padding: 10px 5px;
+          box-sizing: border-box;
+
+          &:focus {
+            outline: none;
+            border: 3px solid #fec23b;
+            box-shadow: 0 2px 5px rgba($color: #fec23b, $alpha: .8);
+          }
+        }
+
+        textarea {
+          resize: none;
         }
       }
 
@@ -180,6 +207,7 @@ export default {
         border: 3px solid black;
         background-color: white;
         padding: 5px;
+        outline: none;
       }
 
       &:hover button {
@@ -196,8 +224,48 @@ export default {
     }
   }
 
-  @media only screen and (min-width: 600px) {
+  @media (min-width: 550px) {
+    .image-container {
+      flex-flow: wrap !important;
+      justify-content: space-between;
+      margin: 20px 0;
+      padding: 0;
+    }
+  }
 
+  @media (min-width: 768px) {
+    .input-content {
+      display: flex;
+      justify-content: space-between;
+
+      &-items {
+        width: 45%;
+      }
+
+      &-images {
+        width: 45%;
+      }
+    }
+
+    .image-container {
+      flex-flow: column !important;
+      text-align: left !important;
+      justify-content: space-between;
+      margin: 20px 0;
+      padding: 0;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .image-container {
+      flex-flow: row !important;
+      flex-flow: wrap !important;
+      justify-content: initial;
+
+      .image-list {
+        padding-right: 10px;
+      }
+    }
   }
 }
 </style>
