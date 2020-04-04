@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Shrikhand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap');
+
+html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    margin: 0;
+    height: 100%;
+}
+
+h1, h2 {
+    font-family: 'Shrikhand', cursive;
+    letter-spacing: 2px;
+}
+
+h3, h4, label, button, p {
+    font-family: 'Inconsolata', cursive;
+}

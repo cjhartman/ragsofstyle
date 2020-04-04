@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Back end to e-commerce site",
   "main": "src/app.js",
   "scripts": {
@@ -16,11 +16,14 @@
     "concurrently": "^5.1.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "file-system": "^2.2.2",
+    "https": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.1",
-    "morgan": "^1.9.1",
+    "mongoose": "^5.9.7",
+    "morgan": "^1.10.0",
     "nodemon": "^2.0.2",
     "passport": "^0.4.1",
-    "passport-jwt": "^4.0.0"
+    "passport-jwt": "^4.0.0",
+    "path": "^0.12.7"
   }
 }
