@@ -30,7 +30,9 @@
             </select>
           </div>
           <div>
-            <button type="submit" class="go-button" @click.prevent="search">Get Photos</button>
+            <div class="button-container">
+              <button type="submit" class="get-photos-button" @click.prevent="search">Get Photos</button>
+            </div>
             <p v-if="loading">
               Loading...
             </p>
@@ -92,6 +94,107 @@ export default {
 .admin-container {
   height: 100vh;
   padding: 0 25px;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+
+    .admin-header-right {
+      display: flex;
+      h4:first-child {
+        padding-right: 10px;
+      }
+    }
+  }
+
+  .admin-content {
+    .input-content {
+      &-items {
+        margin-bottom: 20px;
+
+        label,
+        input,
+        select {
+          width: 100%;
+          display: block;
+          padding: 10px 0;
+        }
+      }
+
+      .image-container {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        margin: 20px 0;
+        padding: 0;
+
+        .image-list {
+          list-style: none;
+          display: block;
+
+          img {
+            max-height: 200px;
+          }
+        }
+      }
+    }
+
+    .button-container {
+      width: 100%;
+      position: relative;
+      display: inline-block;
+      background-color: black;
+
+      &:before,
+      &:after {
+        content: '';
+        display: block;
+        background-color: black;
+        width: 8px;
+        height: 8px;
+        position: absolute;
+        transition: all .15s ease;
+      }
+
+      &:before {
+        top: 0;
+        left: 0;
+        transform-origin: top left;
+        transform: rotate(-45deg) scale(0);
+      }
+
+      &:after {
+        right: 0;
+        bottom: 0;
+        transform-origin: bottom right;
+        transform: rotate(45deg) scale(0);
+      }
+
+      button {
+        width: 100%;
+        display: block;
+        transform: translate(0, 0);
+        transition: all .15s ease;
+        position: relative;
+        z-index: 10;
+        border: 3px solid black;
+        background-color: white;
+        padding: 5px;
+      }
+
+      &:hover button {
+        transform: translate(6px, -6px);
+      }
+
+      &:hover:before {
+        transform: rotate(-45deg) scale(1);
+      }
+
+      &:hover:after {
+        transform: rotate(45deg) scale(1);
+      }
+    }
+  }
 
   @media only screen and (min-width: 600px) {
 
