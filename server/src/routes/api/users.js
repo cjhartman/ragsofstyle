@@ -115,7 +115,7 @@ router.post('/login', (req, res) => {
 
 
 /**
- * @route POST api/users/profile
+ * @route GET api/users/profile
  * @desc Return the User's data
  * @acces Private
  */

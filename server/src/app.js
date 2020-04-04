@@ -4,8 +4,12 @@ const cors = require('cors');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const https = require('https');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
+const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(morgan('combined'));
@@ -13,6 +17,11 @@ app.use(morgan('combined'));
 app.use(bodyParser.urlencoded({
     extended: false
 }))
+
+const options = {
+    key: fs.readFileSync(path.resolve('./src/config/keys/server.key')),
+    cert: fs.readFileSync(path.resolve('./src/config/keys/server.cert'))
+};
 
 //Json Body Middleware
 app.use(bodyParser.json());
@@ -26,11 +35,14 @@ app.use(passport.initialize());
 // Bring in passport strategy
 require('./config/passport')(passport);
 
-// Port to listen on
-app.listen(process.env.PORT || 3000)
-
 const users = require('./routes/api/users');
 app.use('/api/users', users);
+
+// Port to listen on
+https.createServer(options, app).listen(port, () => {
+    console.log('Express server listening on port ' + port);
+})
+// app.listen(process.env.PORT || 3000)
 
 // Bring in DB config
 // Setting up mongo

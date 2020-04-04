@@ -8,6 +8,11 @@ const router = new Router({
   mode: 'history',
   routes: [
     {
+      path: '/home',
+      name: 'home',
+      component: () => import('../components/Home.vue')
+    },
+    {
       path: '/register',
       name: 'register',
       component: () => import('../components/Register.vue'),
