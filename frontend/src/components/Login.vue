@@ -2,7 +2,7 @@
     <div class="container">
         <section class="login-container">
             <div class="login-header">
-                <h1>Welcome Back</h1>
+                <h1 class="main-headers">Welcome Back</h1>
                 <h4>Please login with your username & password</h4>
             </div>
             <div class="login-form">
@@ -28,7 +28,9 @@
                         </div>
                         <div class="button-group">
                             <a href="#" class="reset-link">Reset Password</a>
-                            <button type="submit" class="login-button">Login</button>
+                            <div class="button-container">
+                                <button type="submit" class="login-button">Login</button>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -71,11 +73,23 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #fec23b;
 
     .login-container {
         .login-header {
             margin-bottom: 35px;
+
+            .main-headers {
+                position: relative;
+
+                &:after {
+                    content: "Welcome Back";
+                    position: absolute;
+                    top: 2px;
+                    left: -2px;
+                    color: #fec23b;
+                    z-index: -1;
+                }
+            }
         }
 
         .form-group {
@@ -85,25 +99,6 @@ export default {
             .username-form {
                 margin-bottom: 10px;
             }
-
-            .form {
-                width: 100%;
-                display: block;
-                text-align: left;
-                border-radius: 5px;
-                border: 1px solid gray;
-                padding: 10px;
-                outline: none;
-                font-size: 1rem;
-                background-color: transparent;
-                color: #f26f63;
-
-                &:focus {
-                    box-shadow: 0 0 5px #f26f63;
-                    padding: 10px;
-                    border: 1px solid #f26f63;
-                }
-            }
         }
         .button-group {
             display: flex;
@@ -111,13 +106,8 @@ export default {
             align-items: center;
             margin-top: 20px;
 
-            .login-button {
-                border-radius: 5px;
-                border: 1px solid gray;
-                background-color: transparent;
-                outline: none;
-                cursor: pointer;
-                padding: 7px;
+            .button-container {
+                width: 50%;
             }
 
             .reset-link {
