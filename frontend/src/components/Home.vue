@@ -2,11 +2,15 @@
   <div class="home-container">
     <div class="hero">
       <section class="home-content">
-        <h1 class="save-the-planet">Save the planet, buy vintage</h1>
-        <div class="secondary-button-container">
-          <button class="shop-now">SHOP NOW</button>
+        <div class="home-text-container">
+          <h1 class="save-the-planet">Save the planet, buy vintage</h1>
+          <div class="secondary-button-container">
+            <button class="shop-now">SHOP NOW</button>
+          </div>
         </div>
-        <img class="hero-img" src="../assets/cold_boy.jpg" alt="Hero"/>
+        <div class="hero-img-container">
+          <img class="hero-img" src="../assets/cold_boy.jpg" alt="Hero"/>
+        </div>
       </section>
     </div>
     <section class="featured-content">
@@ -67,14 +71,18 @@ export default {
   .hero {
     padding: 6rem 4rem;
     background-color: #F8F4F2;
+    background-image: url('../assets/cold_boy.jpg');
+    background-size: cover;
 
     .home-content {
       z-index: 1;
       position: relative;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
       height: 100%;
+
+        .hero-img {
+          display: none;
+        }
 
       .save-the-planet {
         margin: 0;
@@ -132,21 +140,25 @@ export default {
 @media (min-width: 768px) {
   .home-container {
     .hero {
-      padding: 6rem 4rem;
       background-color: #F8F4F2;
+      background-image: none;
+      min-height: 500px;
 
       .home-content {
         z-index: 1;
         position: relative;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
-        height: 100%;
+        min-height: inherit;
+        align-items: center;
 
-        .hero-img {
+        .hero-img-container {
           position: absolute;
-          max-width: 60%;
           right: 0;
+
+          .hero-img {
+            display: block;
+            max-height: 425px;
+          }
         }
 
         .save-the-planet {
@@ -185,19 +197,26 @@ export default {
 
 @media (min-width: 1024px) {
   .home-container {
-    .home-content {
-      padding: 0 4rem;
-      z-index: 1;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      height: 100%;
+    .hero {
+      padding: 6rem 8rem;
 
-      .hero-img {
-        position: absolute;
-        max-width: 60%;
-        right: 0;
+      .home-content {
+        z-index: 1;
+        position: relative;
+        display: flex;
+        height: 100%;
+
+        .hero-img-container {
+          .hero-img {
+            display: block;
+            max-height: 475px;
+          }
+        }
+
+        .save-the-planet {
+          font-size: 4rem;
+          max-width: 44.1875rem;
+        }
       }
     }
 
@@ -220,6 +239,52 @@ export default {
             width: 25%;
             padding-right: 20px;
           }
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1440px) {
+  .home-container {
+    .hero {
+
+      .home-content {
+        z-index: 1;
+        position: relative;
+        display: flex;
+        height: 100%;
+
+        .hero-img-container {
+          .hero-img {
+            display: block;
+            max-height: 525px;
+          }
+        }
+
+        .save-the-planet {
+          font-size: 4.125rem;
+          max-width: 45.1875rem;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1600px) {
+  .home-container {
+    .hero {
+      .home-content {
+        .hero-img-container {
+          .hero-img {
+            display: block;
+            max-height: 600px;
+          }
+        }
+
+        .save-the-planet {
+          font-size: 5.125rem;
+          max-width: 45.1875rem;
         }
       }
     }
