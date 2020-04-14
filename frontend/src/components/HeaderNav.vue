@@ -3,6 +3,9 @@
     <nav class="navbar-container">
       <div class="navbar">
         <img class="ros-img" src="../assets/ros-logo-black.svg"/>
+        <div class="hamburger-icon-container" @click="isShowNav = !iShowNav">
+          <div class="hamburger-icon"></div>
+        </div>
         <div class="links">
           <router-link
             v-for="routes in links"
@@ -12,6 +15,17 @@
         </div>
       </div>
     </nav>
+    <transition name="slide">
+      <div class="hidden-nav" v-if="isShowNav">
+        <ul class="hidden-nav-links">
+          <li class="hidden-nav-links-items" v-for="routes in links" :key="routes.id">
+            <router-link
+              :to="`${routes.page}`">{{ routes.text }}
+            </router-link>
+          </li>
+        </ul>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -41,7 +55,8 @@ export default {
           text: 'Cart',
           page: '/cart'
         }
-      ]
+      ],
+      isShowNav: false
     }
   }
 }
@@ -50,6 +65,7 @@ export default {
 <style lang="scss" scoped>
 .navbar-container {
   background-color: #fec23b;
+  padding: 0 1rem;
 
   .navbar {
     height: 80px;
@@ -61,7 +77,48 @@ export default {
       height: 60px;
     }
 
+    .hamburger-icon-container {
+      width: 40px;
+      cursor: pointer;
+      z-index: 6;
+
+      &:before,
+      &:after {
+        background-color: black;
+        border-radius: 3px;
+        content: '';
+        display: block;
+        height: 4px;
+        margin: 6px 4px;
+        transition: all .2s ease-in-out;
+      }
+
+      .hamburger-icon {
+        background-color: black;
+        border-radius: 3px;
+        content: '';
+        display: block;
+        height: 4px;
+        margin: 6px 0;
+        transition: all .2s ease-in-out;
+      }
+
+      &:hover:before {
+        transform: translateY(10px) rotate(135deg);
+      }
+
+      &:hover:after {
+        transform: translateY(-10px) rotate(-135deg);
+      }
+
+      &:hover .hamburger-icon {
+        transform: scale(0);
+      }
+    }
+
     .links {
+      display: none;
+
       a {
         &:not(:last-child) {
           padding-right: 20px;
@@ -76,9 +133,70 @@ export default {
   }
 }
 
+.hidden-nav {
+  position: fixed;
+  height: 100vh;
+  width: 100%;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fec23b;
+  z-index: 5;
+
+  &-links {
+    font-size: 4rem;
+
+    &-items {
+      display: block;
+      padding: 1rem;
+    }
+  }
+}
+
+.slide-enter-active {
+   -moz-transition-duration: 0.5s;
+   -webkit-transition-duration: 0.5s;
+   -o-transition-duration: 0.5s;
+   transition-duration: 0.5s;
+   -moz-transition-timing-function: ease-in;
+   -webkit-transition-timing-function: ease-in;
+   -o-transition-timing-function: ease-in;
+   transition-timing-function: ease-in;
+}
+
+.slide-leave-active {
+   -moz-transition-duration: 0.5s;
+   -webkit-transition-duration: 0.5s;
+   -o-transition-duration: 0.5s;
+   transition-duration: 0.5s;
+   -moz-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+   -webkit-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+   -o-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+   transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+
+.slide-enter-to, .slide-leave {
+   max-height: 100vh;
+   overflow: hidden;
+}
+
+.slide-enter, .slide-leave-to {
+   overflow: hidden;
+   max-height: 0;
+}
+
 @media (min-width: 768px) {
   .navbar-container {
     padding: 1rem 4rem;
+
+    .hamburger-icon-container {
+      display: none;
+    }
+
+    .links {
+      display: block !important;
+    }
   }
 }
 
