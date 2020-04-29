@@ -59,6 +59,7 @@ a {
     cursor: pointer;
     color: black;
     font-family: 'Shrikhand', cursive;
+    position: relative;
 }
 
 ul {

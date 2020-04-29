@@ -6,6 +6,7 @@ Vue.use(Router)
 
 const router = new Router({
   mode: 'history',
+  linkExactActiveClass: 'active',
   routes: [
     {
       path: '/home',
@@ -17,7 +18,8 @@ const router = new Router({
       name: 'register',
       component: () => import('../components/Register.vue'),
       meta: {
-        requiresGuest: true
+        requiresGuest: true,
+        hideNavigation: true
       }
     },
     {
@@ -25,7 +27,8 @@ const router = new Router({
       name: 'login',
       component: () => import('../components/Login.vue'),
       meta: {
-        requiresGuest: true
+        requiresGuest: true,
+        hideNavigation: true
       }
     },
     {
@@ -33,7 +36,8 @@ const router = new Router({
       name: 'admin',
       component: () => import('../components/Admin.vue'),
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        hideNavigation: true
       }
     }
   ]

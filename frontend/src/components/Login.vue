@@ -28,8 +28,8 @@
                         </div>
                         <div class="button-group">
                             <a href="#" class="reset-link">Reset Password</a>
-                            <div class="button-container">
-                                <button type="submit" class="login-button">Login</button>
+                            <div class="secondary-button-container">
+                                <button type="submit" class="seconday-button">Login</button>
                             </div>
                         </div>
                     </div>
@@ -106,7 +106,7 @@ export default {
             align-items: center;
             margin-top: 20px;
 
-            .button-container {
+            .secondary-button-container {
                 width: 50%;
             }
 

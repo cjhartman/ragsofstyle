@@ -1,5 +1,5 @@
 <template>
-  <div class="footer-container">
+  <div class="footer-container" v-if="!$route.meta.hideNavigation">
     <footer class="footer-content">
       <div class="logo-container">
         <router-link to="/home">

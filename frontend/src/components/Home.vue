@@ -21,13 +21,21 @@
         </p>
         <ul v-else>
           <li v-for="image in images" :key="image.id">
-            <a><img :src="image.url_n"></a>
+            <a>{{ image }}<img :src="image.url_n"></a>
           </li>
         </ul>
       </div>
     </section>
-    <section>
-
+    <section class="about-us">
+      <h2>About Us</h2>
+      <div>
+        <p>
+          We’re an environmentally focused, sustainabale, social-first brand. Lorem ipsum dolor
+          sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+          dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+          laboris nisi ut aliquip ex ea commodo consequat.
+        </p>
+      </div>
     </section>
   </div>
 </template>
@@ -135,6 +143,31 @@ export default {
       }
     }
   }
+
+  .about-us {
+    padding: 1rem 4rem;
+    background-color: #fec23b;
+    text-align: center;
+
+    h2 {
+      font-size: 1.5rem;
+      position: relative;
+      display: inline-block;
+      z-index: 1;
+      padding: 0 20px;
+
+      &:before {
+        position: absolute;
+        content: '';
+        height: 50%;
+        width: 100%;
+        z-index: -1;
+        bottom: 0;
+        left: 0;
+        background-color: white;
+      }
+    }
+  }
 }
 
 @media (min-width: 768px) {
@@ -192,6 +225,13 @@ export default {
         }
       }
     }
+
+    .about-us {
+      padding: 3rem 8rem;
+      h2 {
+        font-size: 2.25rem;
+      }
+    }
   }
 }
 
@@ -223,10 +263,6 @@ export default {
     .featured-content {
       padding: 2rem 8rem 4rem;
 
-      h2 {
-        font-size: 2.25rem;
-      }
-
       &-images {
         text-align: left;
 
@@ -241,6 +277,10 @@ export default {
           }
         }
       }
+    }
+
+    .about-us {
+      padding: 3rem 12rem;
     }
   }
 }

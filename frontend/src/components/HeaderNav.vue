@@ -1,9 +1,11 @@
 <template>
-  <div>
+  <div v-if="!$route.meta.hideNavigation">
     <nav class="navbar-container">
       <div class="navbar">
-        <img class="ros-img" src="../assets/ros-logo-black.svg"/>
-        <div class="hamburger-icon-container" @click="isShowNav = !iShowNav">
+        <router-link to="/home">
+          <img class="ros-img" src="../assets/ros-logo-black.svg"/>
+        </router-link>
+        <div class="hamburger-icon-container" @click="isShowNav = !isShowNav">
           <div class="hamburger-icon"></div>
         </div>
         <div class="links">
@@ -120,14 +122,29 @@ export default {
       display: none;
 
       a {
+        position: relative;
+        padding: 0 9px 0 10px;
+        z-index: 2;
+
         &:not(:last-child) {
-          padding-right: 20px;
+          margin-right: 20px;
         }
 
         &:hover {
-          color: #f26f63;
-          text-shadow: 0 0 10px #f26f63;
+          color: #e6584c;
+          text-shadow: 0 0 10px #e6584c;
         }
+      }
+
+      a.active::before {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        z-index: -1;
+        background-color: white;
+        content: '';
+        width: 100%;
+        height: 50%;
       }
     }
   }
