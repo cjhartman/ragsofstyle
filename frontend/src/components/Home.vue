@@ -30,10 +30,11 @@
       <h2>About Us</h2>
       <div>
         <p>
-          We’re an environmentally focused, sustainabale, social-first brand. Lorem ipsum dolor
-          sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-          dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-          laboris nisi ut aliquip ex ea commodo consequat.
+          We are an environmentally focused, sustainable, social-first brand.
+          Rags of Style is here to utilize the resources that are already on the earth in hopes to slow down the production of fast-fashion.
+          Upcycling clothing is becoming more popular everyday and we are here to provide your old-school t-shirts to keep your wardrobe up-to-date.
+          We are able to recycle these used yet quality "rags" and still stay in "style" without being wasteful.
+          Shop second-hand and look amazing while protecting our planet!
         </p>
       </div>
     </section>

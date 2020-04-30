@@ -39,6 +39,11 @@ const router = new Router({
         requiresAuth: true,
         hideNavigation: true
       }
+    },
+    {
+      path: '/shop',
+      name: 'shop',
+      component: () => import('../components/Shop.vue')
     }
   ]
 })
