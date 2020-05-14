@@ -24,9 +24,12 @@
         </p>
         <ul v-else>
           <li v-for="image in images" :key="image.id">
-            <a><img :src="image.url_n"></a>
-            <p class="item-name">Name of Item</p>
-            <p>Price</p>
+            {{ image }}
+            <router-link :to="`/view-item/${image.id}`">
+              <img :src="image.url_n">
+            </router-link>
+            <p class="item-name">{{image.title}}</p>
+            <p>$ <span>Price</span></p>
           </li>
         </ul>
       </div>
@@ -93,9 +96,16 @@ export default {
     padding: 2rem;
 
     .shop-items-header{
+      padding-bottom: 2rem;
 
       h2 {
         margin: 0;
+        padding-bottom: 10px;
+      }
+
+      .filter-items {
+        width: 55%;
+        height: 50px;
       }
     }
 
@@ -150,10 +160,10 @@ export default {
       padding: 4rem;
 
       .shop-items-header {
-        padding-bottom: 2rem;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
+        align-items: center;
 
         h2 {
           font-size: 2.75rem;
@@ -177,6 +187,10 @@ export default {
 
             img {
               min-width: 250px;
+            }
+
+            p {
+              font-size: 1.25rem;
             }
           }
         }

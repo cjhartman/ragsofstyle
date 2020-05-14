@@ -10,6 +10,7 @@ const router = new Router({
   routes: [
     {
       path: '/home',
+      alias: '/',
       name: 'home',
       component: () => import('../components/Home.vue')
     },
@@ -44,6 +45,17 @@ const router = new Router({
       path: '/shop',
       name: 'shop',
       component: () => import('../components/Shop.vue')
+    },
+    {
+      path: '/view-item/:id',
+      name: 'view-item',
+      component: () => import('../components/ViewItem.vue')
+    },
+    // No route here, get lost bozo
+    {
+      path: '*',
+      name: '404',
+      component: () => import('../components/404.vue')
     }
   ]
 })
