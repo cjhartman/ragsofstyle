@@ -21,7 +21,7 @@
         </p>
         <ul v-else>
           <li v-for="image in images" :key="image.id">
-            <a>{{ image }}<img :src="image.url_n"></a>
+            <a><img :src="image.url_n"></a>
           </li>
         </ul>
       </div>
@@ -210,7 +210,7 @@ export default {
     .featured-content {
       padding: 3rem 4rem;
       h2 {
-        font-size: 2.25rem;
+        font-size: 2.75rem;
       }
 
       &-images {
@@ -219,9 +219,14 @@ export default {
         ul {
           display: flex !important;
           justify-content: space-between;
+          flex-flow: wrap;
 
           li {
             padding: 20px 20px 0 0;
+
+            img {
+              min-width: 250px;
+            }
           }
         }
       }
@@ -270,10 +275,8 @@ export default {
         ul {
           display: flex;
           justify-content: space-between;
-          flex-flow: nowrap;
 
           li {
-            width: 25%;
             padding-right: 20px;
           }
         }
