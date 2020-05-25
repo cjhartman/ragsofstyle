@@ -56,7 +56,12 @@ export default {
   data () {
     return {
       loading: false,
-      images: []
+      images: [],
+      title: '',
+      color: '',
+      size: '',
+      description: '',
+      price: '',
     }
   },
   computed: mapGetters(['isLoggedIn', 'user']),
