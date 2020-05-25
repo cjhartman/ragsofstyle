@@ -5,7 +5,7 @@
         <div class="home-text-container">
           <h1 class="save-the-planet">Save the planet, buy vintage</h1>
           <div class="secondary-button-container">
-            <router-link class="shop-now" to="/shop" tag="button">SHOP NOW</router-link>
+            <router-link class="shop-now secondary-button-btn" to="/shop" tag="button">SHOP NOW</router-link>
           </div>
         </div>
         <div class="hero-img-container">
@@ -27,7 +27,7 @@
       </div>
     </section>
     <section class="about-us">
-      <h2>About Us</h2>
+      <h2>About Rags of Style</h2>
       <div>
         <p>
           We are an environmentally focused, sustainable, social-first brand.
@@ -36,6 +36,9 @@
           We are able to recycle these used yet quality "rags" and still stay in "style" without being wasteful.
           Shop second-hand and look amazing while protecting our planet!
         </p>
+        <div class="primary-button-container">
+          <router-link class="primary-button-btn" to="/shop" tag="button">SHOP NOW</router-link>
+        </div>
       </div>
     </section>
   </div>
@@ -171,6 +174,11 @@ export default {
         left: 0;
         background-color: white;
       }
+    }
+
+    .primary-button-container {
+      margin-top: 2rem;
+      width: 12.5rem;
     }
   }
 }

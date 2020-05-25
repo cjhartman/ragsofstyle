@@ -29,7 +29,7 @@
                         <div class="button-group">
                             <a href="#" class="reset-link">Reset Password</a>
                             <div class="secondary-button-container">
-                                <button type="submit" class="seconday-button">Login</button>
+                                <button type="submit" class="secondary-button-btn">Login</button>
                             </div>
                         </div>
                     </div>

@@ -4,7 +4,7 @@
       <h1>Nothing to see here.</h1>
       <p>Let's get you back to shopping.</p>
       <div class="secondary-button-container">
-        <router-link to="/home" tag="button">Click me to go home</router-link>
+        <router-link class="secondary-button-btn" to="/home" tag="button">Click me to go home</router-link>
       </div>
     </div>
   </div>

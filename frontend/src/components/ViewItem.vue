@@ -16,7 +16,7 @@
           <span>The size</span>
         </p>
         <div class="secondary-button-container">
-          <button>Add To Cart</button>
+          <button class="secondary-button-btn">Add To Cart</button>
         </div>
         <p>*All payments processed through Paypal</p>
         <p>Description:</p>
