@@ -70,8 +70,8 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Shrikhand&display=swap');
 
 .footer-container {
-  position: sticky;
   padding: 2rem 3rem;
+  clear: both;
   background-color: #252422;
 
   .footer-content {
@@ -129,7 +129,6 @@ export default {
 
 @media (min-width: 768px) {
   .footer-container {
-  position: sticky;
   padding: 3rem 8rem;
   font-size: 100%;
   background-color: #252422;

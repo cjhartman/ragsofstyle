@@ -5,7 +5,7 @@
         <div class="home-text-container">
           <h1 class="save-the-planet">Save the planet, buy vintage</h1>
           <div class="secondary-button-container">
-            <button class="shop-now">SHOP NOW</button>
+            <router-link class="shop-now" to="/shop" tag="button">SHOP NOW</router-link>
           </div>
         </div>
         <div class="hero-img-container">
@@ -88,6 +88,10 @@ export default {
       position: relative;
       display: flex;
       height: 100%;
+
+      .home-text-container {
+        z-index: 10;
+      }
 
         .hero-img {
           display: none;
@@ -292,7 +296,6 @@ export default {
 @media (min-width: 1440px) {
   .home-container {
     .hero {
-
       .home-content {
         z-index: 1;
         position: relative;

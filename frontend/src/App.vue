@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <HeaderNav></HeaderNav>
-    <router-view/>
+    <div id="content">
+      <router-view></router-view>
+    </div>
     <FooterNav></FooterNav>
   </div>
 </template>
@@ -24,5 +26,9 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   width: 100%;
+
+  #content {
+    min-height: 67vh;
+  }
 }
 </style>

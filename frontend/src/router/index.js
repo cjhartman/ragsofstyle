@@ -11,12 +11,12 @@ const router = new Router({
     {
       path: '/home',
       alias: '/',
-      name: 'home',
+      name: 'Home',
       component: () => import('../components/Home.vue')
     },
     {
       path: '/register',
-      name: 'register',
+      name: 'Register',
       component: () => import('../components/Register.vue'),
       meta: {
         requiresGuest: true,
@@ -25,7 +25,7 @@ const router = new Router({
     },
     {
       path: '/login',
-      name: 'login',
+      name: 'Login',
       component: () => import('../components/Login.vue'),
       meta: {
         requiresGuest: true,
@@ -34,7 +34,7 @@ const router = new Router({
     },
     {
       path: '/admin',
-      name: 'admin',
+      name: 'Admin',
       component: () => import('../components/Admin.vue'),
       meta: {
         requiresAuth: true,
@@ -43,12 +43,12 @@ const router = new Router({
     },
     {
       path: '/shop',
-      name: 'shop',
+      name: 'Shop',
       component: () => import('../components/Shop.vue')
     },
     {
-      path: '/view-item/:id',
-      name: 'view-item',
+      path: '/view-item',
+      name: 'View Item',
       component: () => import('../components/ViewItem.vue')
     },
     // No route here, get lost bozo

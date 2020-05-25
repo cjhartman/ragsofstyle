@@ -19,7 +19,6 @@
           <button>Add To Cart</button>
         </div>
         <p>*All payments processed through Paypal</p>
-        <hr>
         <p>Description:</p>
         <p>Dynamica Desc</p>
         <p>Product Details:</p>
@@ -28,15 +27,19 @@
         </ul>
       </div>
     </section>
+    <MayLike></MayLike>
   </div>
 </template>
 
 <script>
+import MayLike from './MayLike'
 import getPhotos from '../services/FlickrService'
 export default {
+  components: {
+    MayLike
+  },
   created () {
     this.params = this.$route.params.id
-    console.log(this.params)
   },
   data () {
     return {
@@ -57,18 +60,22 @@ export default {
       }).then((response) => {
         this.images = response.data.photos.photo
       })
+    },
+    scrollTop () {
+      window.scrollTo(0, 0)
     }
   },
   beforeMount () {
     this.fetchImages()
+    this.scrollTop()
   }
 }
-
 </script>
 
 <style lang="scss" scoped>
 .view-item-container {
   padding: 2rem;
+  min-height: 62vh;
   .view-item {
     .clothing-large {
 
@@ -83,16 +90,18 @@ export default {
 @media (min-width: 768px) {
   .view-item-container {
     padding: 4rem;
+    min-height: 53vh;
+
     .view-item {
       display: flex;
       justify-content: space-between;
-      
-      .clothing-large {
 
+      .clothing-large {
+        width: 50%;
       }
 
       .clothing-content {
-      
+        width: 50%;
       }
     }
   }

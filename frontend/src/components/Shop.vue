@@ -24,8 +24,7 @@
         </p>
         <ul v-else>
           <li v-for="image in images" :key="image.id">
-            {{ image }}
-            <router-link :to="`/view-item/${image.id}`">
+            <router-link to="/view-item">
               <img :src="image.url_n">
             </router-link>
             <p class="item-name">{{image.title}}</p>
@@ -116,11 +115,6 @@ export default {
 
         li {
           padding: 10px 0;
-
-          img {
-            max-height: 100%;
-            max-width: 100%
-          }
 
           .item-name {
             font-weight: 700;

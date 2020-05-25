@@ -1,15 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Shrikhand&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;600;700&display=swap');
-html {
-    height: 100%;
-    font-size: 100%;
-}
-
-body {
-    display: flex;
+html, body {
     margin: 0;
     height: 100%;
     font-size: 100%;
+    position: relative;
 }
 
 @media (max-width: 768px) {
