@@ -7,3 +7,7 @@ const PhotoSchema = require('../../models/Photos')
  * @desc add item to DB
  * @access Private
  */
+
+router.post('/upload-content', (req, res) => {
+   console.log('')
+});

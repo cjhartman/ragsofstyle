@@ -28,6 +28,22 @@
             </select>
             <label for="description">Description</label>
             <textarea name="description" id="description" type="text" maxlength="150"/>
+            <label for="extra">
+              Extra Product Details - Click the "+ Add New"
+              button to add an extra bit of info to your item for sale
+            </label>
+            <div class="extras" v-for="extra in extras" :key="extra.id">
+              <input v-model="extra.value"/>
+              <div class="button-container add-extra">
+                <button type="button"
+                  @click="deleteProductDetail(extra.id)">
+                  Delete
+                </button>
+              </div>
+            </div>
+            <div class="secondary-button-container add-extra">
+              <button class="secondary-button-btn" type="button" @click="addProductDetail">+ Add New</button>
+            </div>
           </div>
           <div class="input-content-images">
             <p>Select the images associated with your item</p>
@@ -41,8 +57,8 @@
             </ul>
           </div>
         </div>
-        <div class="button-container">
-          <button type="submit">Upload</button>
+        <div class="secondary-button-container">
+          <button class="secondary-button-btn" type="submit">Upload</button>
         </div>
       </form>
     </div>
@@ -62,6 +78,7 @@ export default {
       size: '',
       description: '',
       price: '',
+      extras: []
     }
   },
   computed: mapGetters(['isLoggedIn', 'user']),
@@ -85,6 +102,14 @@ export default {
       }).then((response) => {
         this.images = response.data.photos.photo
       })
+    },
+    addProductDetail () {
+      this.extras.push({
+        value: ''
+      })
+    },
+    deleteProductDetail (index) {
+      this.extras.splice(index, 1)
     }
   },
   created () {
@@ -159,6 +184,14 @@ export default {
             border: 3px solid #fec23b;
             box-shadow: 0 2px 5px rgba($color: #fec23b, $alpha: .8);
           }
+        }
+
+        .extras {
+          margin-top: 10px;
+        }
+
+        .add-extra {
+          margin-top: 10px;
         }
 
         textarea {

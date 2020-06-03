@@ -25,7 +25,7 @@ const PhotoSchema = new Schema({
         type: String,
         required: true
     },
-    extra: {
+    extras: {
         type: String,
         required: false
     }
