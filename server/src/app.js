@@ -38,6 +38,9 @@ require('./config/passport')(passport);
 const users = require('./routes/api/users');
 app.use('/api/users', users);
 
+const photos = require('./routes/api/photos');
+app.use('/api/photos', photos);
+
 // Port to listen on
 https.createServer(options, app).listen(port, () => {
     console.log('Express server listening on port ' + port);

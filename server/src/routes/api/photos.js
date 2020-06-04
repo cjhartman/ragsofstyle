@@ -8,6 +8,40 @@ const PhotoSchema = require('../../models/Photos')
  * @access Private
  */
 
-router.post('/upload-content', (req, res) => {
-   console.log('')
+router.post('/upload', (req, res) => {
+   let = {
+      title,
+      color,
+      size,
+      description,
+      price,
+      extras
+   } = req.body
+
+   //check to see that title is unique
+   PhotoSchema.findOne({title: title}.then(photo => {
+      if (photo) {
+         return res.status(400).json({
+            msg: "Title is already in use, please change it to a different one"
+         });
+      }
+   }));
+
+   let newItem = new PhotoSchema({
+      title,
+      color,
+      size,
+      description,
+      price,
+      extras
+   });
+
+   newItem.save().then(item => {
+      return res.status(201).json({
+         success: true,
+         msg: "New Item has been uploaded"
+     })
+   });
 });
+
+module.exports = router;

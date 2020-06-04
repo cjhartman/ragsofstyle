@@ -58,7 +58,7 @@
           </div>
         </div>
         <div class="secondary-button-container">
-          <button class="secondary-button-btn" type="submit">Upload</button>
+          <button class="secondary-button-btn" type="submit" @click="upload">Upload</button>
         </div>
       </form>
     </div>
@@ -85,7 +85,8 @@ export default {
   methods: {
     ...mapActions([
       'logout',
-      'getAdminProfile'
+      'getAdminProfile',
+      'upload'
     ]),
     logoutUser () {
       this.logout()
@@ -110,6 +111,23 @@ export default {
     },
     deleteProductDetail (index) {
       this.extras.splice(index, 1)
+    },
+    uploadPhotos () {
+      let photos = {
+        title: this.title,
+        color: this.color,
+        size: this.size,
+        description: this.description,
+        price: this.price,
+        extras: this.extras
+      }
+      this.upload(photos).then(res => {
+        if (res.data.success) {
+          console.log('you did it')
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     }
   },
   created () {
