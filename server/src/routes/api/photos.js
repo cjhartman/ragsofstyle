@@ -19,13 +19,13 @@ router.post('/upload', (req, res) => {
    } = req.body
 
    //check to see that title is unique
-   PhotoSchema.findOne({title: title}.then(photo => {
+   PhotoSchema.findOne({title: title}).then(photo => {
       if (photo) {
          return res.status(400).json({
             msg: "Title is already in use, please change it to a different one"
          });
       }
-   }));
+   });
 
    let newItem = new PhotoSchema({
       title,
@@ -36,12 +36,17 @@ router.post('/upload', (req, res) => {
       extras
    });
 
+   debugger
    newItem.save().then(item => {
       return res.status(201).json({
          success: true,
          msg: "New Item has been uploaded"
      })
    });
+});
+
+router.get('/upload', (req, res) => {
+   return req.body
 });
 
 module.exports = router;

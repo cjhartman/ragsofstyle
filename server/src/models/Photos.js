@@ -26,7 +26,7 @@ const PhotoSchema = new Schema({
         required: true
     },
     extras: {
-        type: String,
+        type: Array,
         required: false
     }
 });

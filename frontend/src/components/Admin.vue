@@ -8,17 +8,18 @@
       </div>
     </header>
     <div class="admin-content">
-      <form class="upload-form-group">
+      <form class="upload-form-group" @submit.prevent="uploadPhotos">
         <div class="input-content">
           <div class="input-content-items">
             <label for="title">Title</label>
-            <input name="title" id="title" type="text" maxlength="30"/>
+            <input name="title" type="text" v-model="title" maxlength="30"/>
             <label for="color">Color</label>
-            <input name="color" id="color" type="text" maxlength="75"/>
+            <input name="color" type="text" v-model="color" maxlength="75"/>
             <label for="description">Price</label>
-            <input name="price" id="price" type="number" min="1" step="any" maxlength="5"/>
+            <input name="price" type="number" v-model="price" min="1" step="any" maxlength="5"/>
             <label for="size">Size</label>
-            <select name="size" id="size" type="select">
+            <select name="size" type="select" v-model="size">
+              <option disabled value="">Please choose a size</option>
               <option>XS</option>
               <option>S</option>
               <option>M</option>
@@ -27,7 +28,7 @@
               <option>XXL</option>
             </select>
             <label for="description">Description</label>
-            <textarea name="description" id="description" type="text" maxlength="150"/>
+            <textarea name="description" type="text" v-model="description" maxlength="150"/>
             <label for="extra">
               Extra Product Details - Click the "+ Add New"
               button to add an extra bit of info to your item for sale
@@ -52,13 +53,17 @@
             </p>
             <ul v-else class="image-container">
               <li class="image-list" v-for="image in images" :key="image.id">
-                <img class="images" :src="image.url_n">
+                <label class="fancy-checkbox-label" :for="image.id">
+                  <input type="checkbox" :id="image.id">
+                  <span class="fancy-checkbox fancy-checkbox-img"></span>
+                  <img class="images" :src="image.url_n">
+                </label>
               </li>
             </ul>
           </div>
         </div>
         <div class="secondary-button-container">
-          <button class="secondary-button-btn" type="submit" @click="upload">Upload</button>
+          <button class="secondary-button-btn" type="submit">Upload</button>
         </div>
       </form>
     </div>
@@ -122,9 +127,7 @@ export default {
         extras: this.extras
       }
       this.upload(photos).then(res => {
-        if (res.data.success) {
-          console.log('you did it')
-        }
+      // Do something here so that the page refreshes with the added item in the db
       }).catch(err => {
         console.log(err)
       })
@@ -227,9 +230,73 @@ export default {
         .image-list {
           list-style: none;
           display: block;
+          position: relative;
 
           img {
             max-height: 200px;
+          }
+
+          .fancy-checkbox-label > input[type=checkbox] {
+            position: absolute;
+            opacity: 0;
+            cursor: inherit;
+          }
+
+          .fancy-checkbox-label {
+            font-weight: normal;
+            cursor: pointer;
+          }
+
+          .fancy-checkbox:before {
+            content: "";
+            background: #fff;
+            color: transparent;
+            z-index: 1;
+            width: 1.25rem;
+            height: 1.25rem;
+          }
+
+          .fancy-checkbox-label:hover > input:not(:checked) + .fancy-checkbox:before {
+            color: #000000;
+          }
+
+          input:checked + .fancy-checkbox:before {
+            color: #fff;
+            background: #f26f63;
+            border-color: #f26f63;
+            animation: shrink forwards;
+          }
+
+          .fancy-checkbox-img:before {
+            position: absolute;
+            margin: 3px;
+            line-height: normal;
+          }
+
+          input:checked + .fancy-checkbox-img + img {
+            animation: shrink .5s forwards;
+          }
+
+          input:not(:checked) + .fancy-checkbox-img + img {
+            animation: unshrink .5s forwards;
+          }
+
+          @keyframes shrink {
+            0% {
+              transform: scale(1);
+            }
+            100% {
+              transform: scale(0.9);
+            }
+          }
+          
+          @keyframes unshrink {
+            0% {
+              transform: scale(0.9);
+            }
+            100% {
+              transform: scale(1);
+            }
           }
         }
       }
