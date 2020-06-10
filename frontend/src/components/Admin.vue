@@ -118,9 +118,11 @@ export default {
     deleteProductDetail (index) {
       this.extras.splice(index, 1)
     },
+    checkSelectedImageId () {
+      console.log(this.selectedImages)
+    },
     uploadPhotos () {
       let photos = {
-        id: this.image.id,
         title: this.title,
         color: this.color,
         size: this.size,
