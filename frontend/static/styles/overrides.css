@@ -131,6 +131,7 @@ textarea {
     background-color: white;
     padding: 5px;
     outline: none;
+    cursor: pointer;
 }
 
 .primary-button-container:hover button {
@@ -190,6 +191,7 @@ textarea {
     padding: 5px;
     outline: none;
     border: 3px solid black;
+    cursor: pointer;
 }
 
 .secondary-button-container:hover button {

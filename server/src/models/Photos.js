@@ -28,6 +28,10 @@ const PhotoSchema = new Schema({
     extras: {
         type: Array,
         required: false
+    },
+    selectedImages: {
+        type: Array,
+        required: true
     }
 });
 

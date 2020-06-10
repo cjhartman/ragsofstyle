@@ -29,13 +29,15 @@
     <section class="about-us">
       <h2>About Rags of Style</h2>
       <div>
-        <p>
-          We are an environmentally focused, sustainable, social-first brand.
-          Rags of Style is here to utilize the resources that are already on the earth in hopes to slow down the production of fast-fashion.
-          Upcycling clothing is becoming more popular everyday and we are here to provide your old-school t-shirts to keep your wardrobe up-to-date.
-          We are able to recycle these used yet quality "rags" and still stay in "style" without being wasteful.
-          Shop second-hand and look amazing while protecting our planet!
-        </p>
+        <div class="about-rags">
+          <p>We are an environmentally focused, sustainable, social-first brand.</p>
+          <p>
+            Rags of Style is here to utilize the resources that are already on the earth in hopes to slow down the production of fast-fashion.
+            Upcycling clothing is becoming more popular everyday and we are here to provide your old-school t-shirts to keep your wardrobe up-to-date.
+            We are able to recycle these used yet quality "rags" and still stay in "style" without being wasteful.
+          </p>
+          <p>Shop second-hand and look amazing while protecting our planet!</p>
+        </div>
         <div class="primary-button-container">
           <router-link class="primary-button-btn" to="/shop" tag="button">SHOP NOW</router-link>
         </div>
@@ -174,6 +176,10 @@ export default {
         left: 0;
         background-color: white;
       }
+    }
+
+    .about-rags {
+      line-height: 150%;
     }
 
     .primary-button-container {

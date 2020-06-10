@@ -15,7 +15,8 @@ router.post('/upload', (req, res) => {
       size,
       description,
       price,
-      extras
+      extras,
+      selectedImages
    } = req.body
 
    //check to see that title is unique
@@ -33,10 +34,10 @@ router.post('/upload', (req, res) => {
       size,
       description,
       price,
-      extras
+      extras,
+      selectedImages
    });
 
-   debugger
    newItem.save().then(item => {
       return res.status(201).json({
          success: true,

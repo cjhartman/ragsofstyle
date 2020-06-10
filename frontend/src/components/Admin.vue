@@ -15,7 +15,7 @@
             <input name="title" type="text" v-model="title" maxlength="30"/>
             <label for="color">Color</label>
             <input name="color" type="text" v-model="color" maxlength="75"/>
-            <label for="description">Price</label>
+            <label for="price">Price</label>
             <input name="price" type="number" v-model="price" min="1" step="any" maxlength="5"/>
             <label for="size">Size</label>
             <select name="size" type="select" v-model="size">
@@ -54,7 +54,7 @@
             <ul v-else class="image-container">
               <li class="image-list" v-for="image in images" :key="image.id">
                 <label class="fancy-checkbox-label" :for="image.id">
-                  <input type="checkbox" :id="image.id">
+                  <input type="checkbox" :id="image.id" :value="image.id" v-model="selectedImages">
                   <span class="fancy-checkbox fancy-checkbox-img"></span>
                   <img class="images" :src="image.url_n">
                 </label>
@@ -78,6 +78,7 @@ export default {
     return {
       loading: false,
       images: [],
+      selectedImages: [],
       title: '',
       color: '',
       size: '',
@@ -119,12 +120,14 @@ export default {
     },
     uploadPhotos () {
       let photos = {
+        id: this.image.id,
         title: this.title,
         color: this.color,
         size: this.size,
         description: this.description,
         price: this.price,
-        extras: this.extras
+        extras: this.extras,
+        selectedImages: this.selectedImages
       }
       this.upload(photos).then(res => {
       // Do something here so that the page refreshes with the added item in the db
@@ -209,6 +212,11 @@ export default {
 
         .extras {
           margin-top: 10px;
+          display: flex;
+
+          input {
+            margin-right: 10px;
+          }
         }
 
         .add-extra {
@@ -226,6 +234,8 @@ export default {
         text-align: center;
         margin: 20px 0;
         padding: 0;
+        max-height: 500px;
+        overflow-y: scroll;
 
         .image-list {
           list-style: none;
@@ -289,7 +299,6 @@ export default {
               transform: scale(0.9);
             }
           }
-          
           @keyframes unshrink {
             0% {
               transform: scale(0.9);
@@ -372,14 +381,15 @@ export default {
   @media (min-width: 768px) {
     .input-content {
       display: flex;
-      justify-content: space-between;
 
       &-items {
-        width: 45%;
+        width: 30%;
+        margin-right: 30px;
       }
 
       &-images {
-        width: 45%;
+        width: 30%;
+        margin-right: 30px;
       }
     }
 
