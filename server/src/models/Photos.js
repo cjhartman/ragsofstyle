@@ -32,6 +32,14 @@ const PhotoSchema = new Schema({
     selectedImages: {
         type: Array,
         required: true
+    },
+    dateAdded: {
+        type: Date,
+        default: Date.now
+    },
+    onSale: {
+        type: Boolean,
+        required: false
     }
 });
 

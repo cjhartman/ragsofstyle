@@ -16,7 +16,9 @@ router.post('/upload', (req, res) => {
       description,
       price,
       extras,
-      selectedImages
+      selectedImages,
+      dateAdded,
+      onSale
    } = req.body
 
    //check to see that title is unique
@@ -35,7 +37,9 @@ router.post('/upload', (req, res) => {
       description,
       price,
       extras,
-      selectedImages
+      selectedImages,
+      dateAdded,
+      onSale
    });
 
    newItem.save().then(item => {

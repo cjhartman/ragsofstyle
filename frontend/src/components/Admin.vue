@@ -45,6 +45,13 @@
             <div class="secondary-button-container add-extra">
               <button class="secondary-button-btn" type="button" @click="addProductDetail">+ Add New</button>
             </div>
+            <p>Do you want to add a "Sale" sign</p>
+            <div class="sale-container">
+              <label class="sale-checkbox-label" for="sale">
+                <input name="sale" type="checkbox" v-model="sale">
+                <span class="checkmark"></span>
+              </label>
+            </div>
           </div>
           <div class="input-content-images">
             <p>Select the images associated with your item</p>
@@ -60,6 +67,12 @@
                 </label>
               </li>
             </ul>
+          </div>
+          <div class="db-images-content">
+            <p>These are your already uploaded items</p>
+            <p v-if="dbLoading">
+              Loading...
+            </p>
           </div>
         </div>
         <div class="secondary-button-container">
@@ -84,7 +97,8 @@ export default {
       size: '',
       description: '',
       price: '',
-      extras: []
+      extras: [],
+      sale: false
     }
   },
   computed: mapGetters(['isLoggedIn', 'user']),
@@ -129,7 +143,8 @@ export default {
         description: this.description,
         price: this.price,
         extras: this.extras,
-        selectedImages: this.selectedImages
+        selectedImages: this.selectedImages,
+        sale: this.sale
       }
       this.upload(photos).then(res => {
       // Do something here so that the page refreshes with the added item in the db
@@ -227,6 +242,51 @@ export default {
 
         textarea {
           resize: none;
+        }
+
+        .sale-checkbox-label input {
+          opacity: 0;
+          position: absolute;
+          left: 0;
+          top: 0;
+          z-index: 10;
+          width: 20px;
+          height: 20px;
+          margin: 2px;
+        }
+
+        .sale-checkbox-label {
+          display: inline-block;
+          position: relative;
+          user-select: none;
+        }
+
+        .sale-checkbox-label .checkmark {
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          background: white;
+          position: absolute;
+          left: 0;
+          top: 0;
+          border: 2px solid black;
+        }
+
+        .sale-checkbox-label input:checked + .checkmark {
+          background-color: #f26f63;
+          border: 2px solid black;
+        }
+
+        .sale-checkbox-label input:checked + .checkmark:after {
+          content: "";
+          position: absolute;
+          height: 6px;
+          width: 11px;
+          border-left: 2px solid white;
+          border-bottom: 2px solid white;
+          top: 45%;
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(-45deg);
         }
       }
 
