@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const passport = require('passport');
 const PhotoSchema = require('../../models/Photos')
 
 /**
@@ -9,7 +10,7 @@ const PhotoSchema = require('../../models/Photos')
  */
 
 router.post('/upload', (req, res) => {
-   let = {
+   let {
       title,
       color,
       size,
@@ -50,8 +51,17 @@ router.post('/upload', (req, res) => {
    });
 });
 
-router.get('/upload', (req, res) => {
-   return req.body
+/**
+ * @route GET api/photos/items
+ * @desc Return the Items
+ * @access Private
+ */
+router.get('/items', passport.authenticate('jwt', { 
+   session: false
+}), (req, res) => {
+   return res.json({
+      item: req.item
+   });
 });
 
 module.exports = router;

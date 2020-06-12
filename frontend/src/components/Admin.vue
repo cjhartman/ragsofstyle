@@ -70,7 +70,7 @@
           </div>
           <div class="db-images-content">
             <p>These are your already uploaded items</p>
-            <p v-if="dbLoading">
+            <p v-if="loading">
               Loading...
             </p>
           </div>
@@ -101,12 +101,13 @@ export default {
       sale: false
     }
   },
-  computed: mapGetters(['isLoggedIn', 'user']),
+  computed: mapGetters(['isLoggedIn', 'user', 'item']),
   methods: {
     ...mapActions([
       'logout',
       'getAdminProfile',
-      'upload'
+      'upload',
+      'getItem'
     ]),
     logoutUser () {
       this.logout()
@@ -155,6 +156,7 @@ export default {
   },
   created () {
     this.getAdminProfile()
+    this.getItem()
   },
   beforeMount () {
     this.fetchImages()

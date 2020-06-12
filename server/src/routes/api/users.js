@@ -117,7 +117,7 @@ router.post('/login', (req, res) => {
 /**
  * @route GET api/users/profile
  * @desc Return the User's data
- * @acces Private
+ * @access Private
  */
 router.get('/profile', passport.authenticate('jwt', { 
     session: false

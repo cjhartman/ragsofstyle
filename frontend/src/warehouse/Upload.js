@@ -7,7 +7,7 @@ const state = {
 
 const getters = {
   uploadState: state => state.status,
-  item: state => state.user
+  item: state => state.item
 }
 
 const actions = {
@@ -28,7 +28,7 @@ const actions = {
     commit
   }) {
     commit('item_request')
-    let res = await axios.get('https://localhost:3000/api/users/upload')
+    let res = await axios.get('https://localhost:3000/api/photos/items')
     commit('item_content', res.data.item)
     return res
   }
