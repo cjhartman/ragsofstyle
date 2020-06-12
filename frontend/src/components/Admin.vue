@@ -73,6 +73,15 @@
             <p v-if="loading">
               Loading...
             </p>
+            <ul v-else class="image-container">
+              <li class="image-list" v-for="item in items" :key="item.id">
+                <label class="fancy-checkbox-label" :for="item.id">
+                  <input type="checkbox" :id="item.id" :value="item.id">
+                  <span class="fancy-checkbox fancy-checkbox-img"></span>
+                  <img class="images" :src="item">
+                </label>
+              </li>
+            </ul>
           </div>
         </div>
         <div class="secondary-button-container">
@@ -90,6 +99,7 @@ export default {
   data () {
     return {
       loading: false,
+      dbImages: [],
       images: [],
       selectedImages: [],
       title: '',
@@ -98,10 +108,11 @@ export default {
       description: '',
       price: '',
       extras: [],
-      sale: false
+      sale: false,
+      parseData: []
     }
   },
-  computed: mapGetters(['isLoggedIn', 'user', 'item']),
+  computed: mapGetters(['isLoggedIn', 'user', 'items']),
   methods: {
     ...mapActions([
       'logout',
@@ -118,10 +129,7 @@ export default {
       this.loading = false
     },
     fetchImages () {
-      return getPhotos('people.getPublicPhotos', {
-        page: 1,
-        per_page: 30
-      }).then((response) => {
+      return getPhotos('people.getPublicPhotos').then((response) => {
         this.images = response.data.photos.photo
       })
     },
@@ -132,9 +140,6 @@ export default {
     },
     deleteProductDetail (index) {
       this.extras.splice(index, 1)
-    },
-    checkSelectedImageId () {
-      console.log(this.selectedImages)
     },
     uploadPhotos () {
       let photos = {
@@ -160,6 +165,10 @@ export default {
   },
   beforeMount () {
     this.fetchImages()
+  },
+  updated () {
+    this.parseData = JSON.parse(JSON.stringify(this.images))
+    console.log(this.parseData)
   }
 }
 </script>

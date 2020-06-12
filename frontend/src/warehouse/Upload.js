@@ -1,13 +1,13 @@
 import axios from 'axios'
 
 const state = {
-  item: {},
+  items: {},
   status: ''
 }
 
 const getters = {
   uploadState: state => state.status,
-  item: state => state.item
+  items: state => state.items
 }
 
 const actions = {
@@ -29,7 +29,7 @@ const actions = {
   }) {
     commit('item_request')
     let res = await axios.get('https://localhost:3000/api/photos/items')
-    commit('item_content', res.data.item)
+    commit('item_content', res.data.items)
     return res
   }
 }
@@ -44,8 +44,8 @@ const mutations = {
   item_request (state) {
     state.status = 'loading'
   },
-  item_content (state, item) {
-    state.item = item
+  item_content (state, items) {
+    state.items = items
   }
 }
 

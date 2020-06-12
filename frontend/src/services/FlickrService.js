@@ -13,7 +13,7 @@ export default function getPhotos (method, params) {
       extras: 'url_n, description',
       format: 'json',
       nojsoncallback: 1,
-      per_page: 30
+      per_page: 60
     }
   })
 }
