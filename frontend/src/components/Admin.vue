@@ -59,7 +59,7 @@
               Loading...
             </p>
             <ul v-else class="image-container">
-              <li class="image-list" v-for="image in images" :key="image.id">
+              <li class="image-list" v-for="image in flickrImages" :key="image.id">
                 <label class="fancy-checkbox-label" :for="image.id">
                   <input type="checkbox" :id="image.id" :value="image.id" v-model="selectedImages">
                   <span class="fancy-checkbox fancy-checkbox-img"></span>
@@ -99,8 +99,7 @@ export default {
   data () {
     return {
       loading: false,
-      dbImages: [],
-      images: [],
+      flickrImages: [],
       selectedImages: [],
       title: '',
       color: '',
@@ -109,7 +108,7 @@ export default {
       price: '',
       extras: [],
       sale: false,
-      parseData: []
+      showFlickrDbImage: []
     }
   },
   computed: mapGetters(['isLoggedIn', 'user', 'items']),
@@ -130,7 +129,9 @@ export default {
     },
     fetchImages () {
       return getPhotos('people.getPublicPhotos').then((response) => {
-        this.images = response.data.photos.photo
+        this.flickrImages = response.data.photos.photo
+        this.parseFlickrImages = JSON.parse(JSON.stringify(this.flickrImages))
+        this.viewDbItems()
       })
     },
     addProductDetail () {
@@ -157,6 +158,17 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+    },
+    viewDbItems () {
+      for (let dbImage of this.items) {
+        const firstItem = dbImage.selectedImages.slice(0, 1)
+        this.flickrImages.forEach(photo => {
+          if (photo.id === firstItem.toString()) {
+            this.showFlickrDbImage.push(photo.id)
+          }
+        })
+        console.log(this.showFlickrDbImage)
+      }
     }
   },
   created () {
@@ -165,10 +177,6 @@ export default {
   },
   beforeMount () {
     this.fetchImages()
-  },
-  updated () {
-    this.parseData = JSON.parse(JSON.stringify(this.images))
-    console.log(this.parseData)
   }
 }
 </script>
