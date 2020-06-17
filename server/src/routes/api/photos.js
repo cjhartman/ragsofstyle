@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('passport');
 const PhotoSchema = require('../../models/Photos')
 
 /**
@@ -17,9 +16,12 @@ router.post('/upload', (req, res) => {
         description,
         price,
         extras,
-        selectedImages,
+        selectedFlickrImage,
         dateAdded,
-        onSale
+        onSale,
+        serverId,
+        farmId,
+        secret
     } = req.body
 
     //check to see that title is unique
@@ -38,9 +40,12 @@ router.post('/upload', (req, res) => {
         description,
         price,
         extras,
-        selectedImages,
+        selectedFlickrImage,
         dateAdded,
-        onSale
+        onSale,
+        serverId,
+        farmId,
+        secret
     });
 
     newItem.save().then(item => {

@@ -29,7 +29,7 @@ const PhotoSchema = new Schema({
         type: Array,
         required: false
     },
-    selectedImages: {
+    selectedFlickrImage: {
         type: Array,
         required: true
     },
@@ -40,6 +40,18 @@ const PhotoSchema = new Schema({
     onSale: {
         type: Boolean,
         required: false
+    },
+    serverId: {
+        type: String,
+        required: true
+    },
+    farmId: {
+        type: String,
+        required: true
+    },
+    secret: {
+        type: Array,
+        required: true
     }
 });
 

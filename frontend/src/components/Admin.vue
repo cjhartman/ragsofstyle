@@ -61,15 +61,16 @@
             <ul v-else class="image-container">
               <li class="image-list" v-for="image in flickrImages" :key="image.id">
                 <label class="fancy-checkbox-label" :for="image.id">
-                  <input type="checkbox" :id="image.id" :value="image.id" v-model="selectedImages">
+                  <input type="checkbox" :id="image.id" :value="image" v-model="selectedImages">
                   <span class="fancy-checkbox fancy-checkbox-img"></span>
                   <img class="images" :src="image.url_n">
                 </label>
+                <div>Image Id #: {{ image.id }}</div>
               </li>
             </ul>
           </div>
           <div class="db-images-content">
-            <p>These are your already uploaded items</p>
+            <p>These are your already uploaded items by image id</p>
             <p v-if="loading">
               Loading...
             </p>
@@ -78,8 +79,8 @@
                 <label class="fancy-checkbox-label" :for="item.id">
                   <input type="checkbox" :id="item.id" :value="item.id">
                   <span class="fancy-checkbox fancy-checkbox-img"></span>
-                  <img class="images" :src="item">
                 </label>
+                {{ items }}
               </li>
             </ul>
           </div>
@@ -94,6 +95,7 @@
 
 <script>
 import getPhotos from '../services/FlickrService'
+import getDBPhotosFromFlickr from '../services/FlickrDbService'
 import { mapGetters, mapActions } from 'vuex'
 export default {
   data () {
@@ -108,10 +110,13 @@ export default {
       price: '',
       extras: [],
       sale: false,
-      showFlickrDbImage: []
+      selectedFlickrImage: [],
+      serverId: '',
+      farmId: '',
+      secret: []
     }
   },
-  computed: mapGetters(['isLoggedIn', 'user', 'items']),
+  computed: mapGetters({isLoggedIn: 'isLoggedIn', user: 'user', items: 'items'}),
   methods: {
     ...mapActions([
       'logout',
@@ -128,10 +133,18 @@ export default {
       this.loading = false
     },
     fetchImages () {
-      return getPhotos('people.getPublicPhotos').then((response) => {
+      return getPhotos('people.getPhotos').then((response) => {
         this.flickrImages = response.data.photos.photo
-        this.parseFlickrImages = JSON.parse(JSON.stringify(this.flickrImages))
-        this.viewDbItems()
+      })
+    },
+    getDbImages () {
+      getDBPhotosFromFlickr((farmId, serverId, uid, secret) => {
+        for (let item of this.items) {
+          farmId = item.farmId
+          serverId = item.serverId
+          uid = item.selectedFlickrImage.slice(0, 1)
+          secret = item.secret.slice(0, 1)
+        }
       })
     },
     addProductDetail () {
@@ -143,6 +156,7 @@ export default {
       this.extras.splice(index, 1)
     },
     uploadPhotos () {
+      this.getMetaDataFromImage()
       let photos = {
         title: this.title,
         color: this.color,
@@ -150,24 +164,26 @@ export default {
         description: this.description,
         price: this.price,
         extras: this.extras,
-        selectedImages: this.selectedImages,
-        sale: this.sale
+        selectedFlickrImage: this.selectedFlickrImage,
+        sale: this.sale,
+        serverId: this.serverId,
+        farmId: this.farmId,
+        secret: this.secret
       }
       this.upload(photos).then(res => {
-      // Do something here so that the page refreshes with the added item in the db
+        if (res.status === 201) {
+          this.$router.go()
+        }
       }).catch(err => {
         console.log(err)
       })
     },
-    viewDbItems () {
-      for (let dbImage of this.items) {
-        const firstItem = dbImage.selectedImages.slice(0, 1)
-        this.flickrImages.forEach(photo => {
-          if (photo.id === firstItem.toString()) {
-            this.showFlickrDbImage.push(photo.id)
-          }
-        })
-        console.log(this.showFlickrDbImage)
+    getMetaDataFromImage () {
+      for (let selected of this.selectedImages) {
+        this.serverId = selected.server
+        this.farmId = selected.farm
+        this.selectedFlickrImage.push(selected.id)
+        this.secret.push(selected.secret)
       }
     }
   },
@@ -177,6 +193,9 @@ export default {
   },
   beforeMount () {
     this.fetchImages()
+  },
+  beforeUpdate () {
+    this.getDbImages()
   }
 }
 </script>
@@ -322,6 +341,7 @@ export default {
           list-style: none;
           display: block;
           position: relative;
+          padding-bottom: 1rem;
 
           img {
             max-height: 200px;
