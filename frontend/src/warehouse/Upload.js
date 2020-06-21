@@ -7,7 +7,12 @@ const state = {
 
 const getters = {
   uploadState: state => state.status,
-  items: state => state.items
+  items: state => state.items,
+  dbImages: state => {
+    for (let db of state.items) {
+      return db.selectedFlickrImage
+    }
+  }
 }
 
 const actions = {

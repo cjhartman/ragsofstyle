@@ -45,12 +45,12 @@
             <div class="secondary-button-container add-extra">
               <button class="secondary-button-btn" type="button" @click="addProductDetail">+ Add New</button>
             </div>
-            <p>Do you want to add a "Sale" sign</p>
             <div class="sale-container">
               <label class="sale-checkbox-label" for="sale">
                 <input name="sale" type="checkbox" v-model="sale">
                 <span class="checkmark"></span>
               </label>
+              <label>Add a "Sale" sign</label>
             </div>
           </div>
           <div class="input-content-images">
@@ -70,23 +70,24 @@
             </ul>
           </div>
           <div class="db-images-content">
-            <p>These are your already uploaded items by image id</p>
+            <p>These are your published posts - click post to edit</p>
             <p v-if="loading">
               Loading...
             </p>
             <ul v-else class="image-container">
-              <li class="image-list" v-for="item in items" :key="item.id">
-                <label class="fancy-checkbox-label" :for="item.id">
-                  <input type="checkbox" :id="item.id" :value="item.id">
+              <li class="image-list" v-for="item in flickerItems" :key="item.id" >
+                <label class="fancy-checkbox-label" :for="item._id">
+                  <input type="checkbox" :id="item._id" :value="item" v-model="dbSelectedItem" @change="editPost()">
                   <span class="fancy-checkbox fancy-checkbox-img"></span>
+                  <img class="images" :src="showDbFlickrImage()">
+                  <div>{{ item.title }}</div>
                 </label>
-                {{ items }}
               </li>
             </ul>
           </div>
         </div>
         <div class="secondary-button-container">
-          <button class="secondary-button-btn" type="submit">Upload</button>
+          <button class="secondary-button-btn" type="submit">{{ uploadEdit }}</button>
         </div>
       </form>
     </div>
@@ -95,7 +96,7 @@
 
 <script>
 import getPhotos from '../services/FlickrService'
-import getDBPhotosFromFlickr from '../services/FlickrDbService'
+import Upload from '../warehouse/Upload'
 import { mapGetters, mapActions } from 'vuex'
 export default {
   data () {
@@ -113,10 +114,16 @@ export default {
       selectedFlickrImage: [],
       serverId: '',
       farmId: '',
-      secret: []
+      secret: [],
+      flickerItems: [],
+      uploadEdit: 'Upload Post',
+      dbSelectedItem: [],
+      updateSelectedItem: ''
     }
   },
-  computed: mapGetters({isLoggedIn: 'isLoggedIn', user: 'user', items: 'items'}),
+  computed: {
+    ...mapGetters(['isLoggedIn', 'user', 'items'])
+  },
   methods: {
     ...mapActions([
       'logout',
@@ -135,17 +142,21 @@ export default {
     fetchImages () {
       return getPhotos('people.getPhotos').then((response) => {
         this.flickrImages = response.data.photos.photo
+        this.flickerItems = Upload.state.items
       })
     },
-    getDbImages () {
-      getDBPhotosFromFlickr((farmId, serverId, uid, secret) => {
-        for (let item of this.items) {
-          farmId = item.farmId
-          serverId = item.serverId
-          uid = item.selectedFlickrImage.slice(0, 1)
-          secret = item.secret.slice(0, 1)
-        }
-      })
+    showDbFlickrImage () {
+      let dbImageId
+      let dbSecretId
+      let dbFarmId
+      let dbServerId
+      for (let item of this.flickerItems) {
+        dbImageId = item.selectedFlickrImage[0]
+        dbSecretId = item.secret[0]
+        dbFarmId = item.farmId
+        dbServerId = item.serverId
+      }
+      return 'https://farm' + dbFarmId + '.staticflickr.com/' + dbServerId + '/' + dbImageId + '_' + dbSecretId + '.jpg'
     },
     addProductDetail () {
       this.extras.push({
@@ -185,17 +196,48 @@ export default {
         this.selectedFlickrImage.push(selected.id)
         this.secret.push(selected.secret)
       }
+    },
+    editPost () {
+      if (this.dbSelectedItem.length) {
+        this.uploadEdit = 'Update Post'
+        this.populateFields()
+        return this.uploadEdit
+      } else {
+        this.uploadEdit = 'Upload Post'
+        this.unpopulateFields()
+        return this.uploadEdit
+      }
+    },
+    populateFields () {
+      debugger
+      for (let addItem of this.dbSelectedItem) {
+        this.title = addItem.title
+        this.color = addItem.color
+        this.size = addItem.size
+        this.description = addItem.description
+        this.price = addItem.price
+        this.extras = addItem.extras
+        this.sale = addItem.sale
+        this.selectedFlickrImage = addItem.selectedFlickrImage
+      }
+    },
+    unpopulateFields () {
+      this.title = ''
+      this.color = ''
+      this.size = ''
+      this.description = ''
+      this.price = ''
+      this.extras = ''
+      this.sale = ''
+      this.selectedFlickrImage = ''
     }
   },
   created () {
-    this.getAdminProfile()
     this.getItem()
+    this.getAdminProfile()
   },
   beforeMount () {
     this.fetchImages()
-  },
-  beforeUpdate () {
-    this.getDbImages()
   }
 }
 </script>
@@ -274,6 +316,12 @@ export default {
           }
         }
 
+        .sale-container {
+          padding: 10px 0;
+          display: flex;
+          align-items: center;
+        }
+
         .add-extra {
           margin-top: 10px;
         }
@@ -297,6 +345,8 @@ export default {
           display: inline-block;
           position: relative;
           user-select: none;
+          width: 30px;
+          margin-right: 10px;
         }
 
         .sale-checkbox-label .checkmark {
