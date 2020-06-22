@@ -25,13 +25,15 @@ router.post('/upload', (req, res) => {
     } = req.body
 
     //check to see that title is unique
-    PhotoSchema.findOne({ title: title }).then(photo => {
-        if (photo) {
-            return res.status(400).json({
-                msg: "Title is already in use, please change it to a different one"
-            });
-        }
-    });
+    if (PhotoSchema > 1) {
+        PhotoSchema.findOne({ title: title }).then(photo => {
+            if (photo) {
+                return res.status(400).json({
+                    msg: "Title is already in use, please change it to a different one"
+                });
+            }
+        });
+    }
 
     let newItem = new PhotoSchema({
         title,
@@ -72,5 +74,14 @@ router.get('/items', (req, res) => {
         }
     })  
 });
+
+/** 
+ * @route PUT api/photos/upload
+ * @desc Updates the original item
+ * @access Private
+ */
+router.put('/upload', (req, res) => {
+
+})
 
 module.exports = router;

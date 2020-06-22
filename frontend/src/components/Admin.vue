@@ -8,7 +8,7 @@
       </div>
     </header>
     <div class="admin-content">
-      <form class="upload-form-group" @submit.prevent="uploadPhotos">
+      <form class="upload-form-group" v-on:submit.prevent>
         <div class="input-content">
           <div class="input-content-items">
             <label for="title">Title</label>
@@ -74,20 +74,23 @@
             <p v-if="loading">
               Loading...
             </p>
-            <ul v-else class="image-container">
-              <li class="image-list" v-for="item in flickerItems" :key="item.id" >
-                <label class="fancy-checkbox-label" :for="item._id">
+            <ul v-else class="db-image-container">
+              <li class="db-list">
+                <label class="db-checkbox-label" v-for="item in flickerItems" :key="item.id">
                   <input type="checkbox" :id="item._id" :value="item" v-model="dbSelectedItem" @change="editPost()">
-                  <span class="fancy-checkbox fancy-checkbox-img"></span>
-                  <img class="images" :src="showDbFlickrImage()">
-                  <div>{{ item.title }}</div>
+                  <span class="db-checkbox" :for="item._id"></span>
                 </label>
+              </li>
+              <li class="db-list">
+                <span v-for="dbImage in showImages" :key="dbImage">
+                  <img class="db-flickr-image" :src="dbImage">
+                </span>
               </li>
             </ul>
           </div>
         </div>
         <div class="secondary-button-container">
-          <button class="secondary-button-btn" type="submit">{{ uploadEdit }}</button>
+          <button class="secondary-button-btn" type="submit" @click="uploadEditPhotos">{{ uploadEdit }}</button>
         </div>
       </form>
     </div>
@@ -118,7 +121,8 @@ export default {
       flickerItems: [],
       uploadEdit: 'Upload Post',
       dbSelectedItem: [],
-      updateSelectedItem: ''
+      updateSelectedItem: '',
+      showImages: []
     }
   },
   computed: {
@@ -129,7 +133,8 @@ export default {
       'logout',
       'getAdminProfile',
       'upload',
-      'getItem'
+      'getItem',
+      'revise'
     ]),
     logoutUser () {
       this.logout()
@@ -143,6 +148,7 @@ export default {
       return getPhotos('people.getPhotos').then((response) => {
         this.flickrImages = response.data.photos.photo
         this.flickerItems = Upload.state.items
+        this.showDbFlickrImage()
       })
     },
     showDbFlickrImage () {
@@ -151,12 +157,18 @@ export default {
       let dbFarmId
       let dbServerId
       for (let item of this.flickerItems) {
-        dbImageId = item.selectedFlickrImage[0]
-        dbSecretId = item.secret[0]
+        for (let firstImageInArray of item.selectedFlickrImage) {
+          dbImageId = firstImageInArray
+        }
+        for (let firstSecretInArray of item.secret) {
+          dbSecretId = firstSecretInArray
+        }
         dbFarmId = item.farmId
         dbServerId = item.serverId
+        this.showImages.push('https://farm' + dbFarmId + '.staticflickr.com/' + dbServerId + '/' + dbImageId + '_' + dbSecretId + '.jpg')
       }
-      return 'https://farm' + dbFarmId + '.staticflickr.com/' + dbServerId + '/' + dbImageId + '_' + dbSecretId + '.jpg'
+      console.log(this.showImages)
+      return this.showImages
     },
     addProductDetail () {
       this.extras.push({
@@ -166,28 +178,52 @@ export default {
     deleteProductDetail (index) {
       this.extras.splice(index, 1)
     },
-    uploadPhotos () {
-      this.getMetaDataFromImage()
-      let photos = {
-        title: this.title,
-        color: this.color,
-        size: this.size,
-        description: this.description,
-        price: this.price,
-        extras: this.extras,
-        selectedFlickrImage: this.selectedFlickrImage,
-        sale: this.sale,
-        serverId: this.serverId,
-        farmId: this.farmId,
-        secret: this.secret
-      }
-      this.upload(photos).then(res => {
-        if (res.status === 201) {
-          this.$router.go()
+    uploadEditPhotos () {
+      if (this.uploadEdit === 'Upload Post') {
+        this.getMetaDataFromImage()
+        let photos = {
+          title: this.title,
+          color: this.color,
+          size: this.size,
+          description: this.description,
+          price: this.price,
+          extras: this.extras,
+          selectedFlickrImage: this.selectedFlickrImage,
+          sale: this.sale,
+          serverId: this.serverId,
+          farmId: this.farmId,
+          secret: this.secret
         }
-      }).catch(err => {
-        console.log(err)
-      })
+        this.upload(photos).then(res => {
+          if (res.status === 201) {
+            this.$router.go()
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      } else {
+        this.getMetaDataFromImage()
+        let photos = {
+          title: this.title,
+          color: this.color,
+          size: this.size,
+          description: this.description,
+          price: this.price,
+          extras: this.extras,
+          selectedFlickrImage: this.selectedFlickrImage,
+          sale: this.sale,
+          serverId: this.serverId,
+          farmId: this.farmId,
+          secret: this.secret
+        }
+        this.revise(photos).then(res => {
+          if (res.status === 201) {
+            console.log('it has been updated')
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      }
     },
     getMetaDataFromImage () {
       for (let selected of this.selectedImages) {
@@ -209,7 +245,6 @@ export default {
       }
     },
     populateFields () {
-      debugger
       for (let addItem of this.dbSelectedItem) {
         this.title = addItem.title
         this.color = addItem.color
@@ -218,7 +253,13 @@ export default {
         this.price = addItem.price
         this.extras = addItem.extras
         this.sale = addItem.sale
-        this.selectedFlickrImage = addItem.selectedFlickrImage
+        for (let flickrImageId of addItem.selectedFlickrImage) {
+          for (let image of this.flickrImages) {
+            if (image.id === flickrImageId) {
+              this.selectedImages.push(image)
+            }
+          }
+        }
       }
     },
     unpopulateFields () {
@@ -229,7 +270,7 @@ export default {
       this.price = ''
       this.extras = ''
       this.sale = ''
-      this.selectedFlickrImage = ''
+      this.selectedImages = []
     }
   },
   created () {
@@ -457,6 +498,67 @@ export default {
             100% {
               transform: scale(1);
             }
+          }
+        }
+      }
+
+      .db-image-container {
+        display: flex;
+
+        .db-list {
+          display: flex;
+          flex-direction: column;
+
+          .db-checkbox-label input {
+            opacity: 0;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 10;
+            width: 20px;
+            height: 20px;
+            margin: 2px;
+          }
+
+          .db-checkbox-label {
+            display: inline-block;
+            position: relative;
+            user-select: none;
+            width: 30px;
+            margin: 0 10px 5px 0;
+            height: 200px;
+          }
+
+          .db-checkbox-label .db-checkbox {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: white;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border: 2px solid black;
+          }
+
+          .db-checkbox-label input:checked + .db-checkbox {
+            background-color: #f26f63;
+            border: 2px solid black;
+          }
+
+          .db-checkbox-label input:checked + .db-checkbox:after {
+            content: "";
+            position: absolute;
+            height: 6px;
+            width: 11px;
+            border-left: 2px solid white;
+            border-bottom: 2px solid white;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+          }
+
+          .db-flickr-image {
+            max-height: 200px;
           }
         }
       }

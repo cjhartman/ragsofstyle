@@ -36,6 +36,18 @@ const actions = {
     let res = await axios.get('https://localhost:3000/api/photos/items')
     commit('item_content', res.data.items)
     return res
+  },
+
+  // edit or put the original item
+  async revise ({
+    commit
+  }, item) {
+    commit('put_item')
+    let res = await axios.put('https://localhost:3000/api/photos/upload', item)
+    if (res.data.success !== undefined) {
+      commit('put_item_success')
+    }
+    return res
   }
 }
 
@@ -51,6 +63,12 @@ const mutations = {
   },
   item_content (state, items) {
     state.items = items
+  },
+  put_item (state) {
+    state.status = 'loading'
+  },
+  put_item_success (state) {
+    state.status = 'success'
   }
 }
 
