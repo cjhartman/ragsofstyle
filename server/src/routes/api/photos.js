@@ -91,8 +91,7 @@ router.put('/upload/:id', (req, res) => {
  */
 router.delete('/delete/:id', (req, res) => {
     let id = req.params.id;
-    let foundDocument = PhotoSchema.findById(id)
-    console.log(foundDocument)
+    PhotoSchema.deleteOne({ _id: )
 })
 
 module.exports = router;
