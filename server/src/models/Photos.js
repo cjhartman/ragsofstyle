@@ -37,7 +37,7 @@ const PhotoSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    onSale: {
+    sale: {
         type: Boolean,
         required: false
     },

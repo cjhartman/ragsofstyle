@@ -18,7 +18,7 @@ router.post('/upload', (req, res) => {
         extras,
         selectedFlickrImage,
         dateAdded,
-        onSale,
+        sale,
         serverId,
         farmId,
         secret
@@ -44,7 +44,7 @@ router.post('/upload', (req, res) => {
         extras,
         selectedFlickrImage,
         dateAdded,
-        onSale,
+        sale,
         serverId,
         farmId,
         secret
@@ -80,8 +80,19 @@ router.get('/items', (req, res) => {
  * @desc Updates the original item
  * @access Private
  */
-router.put('/upload', (req, res) => {
+router.put('/upload/:id', (req, res) => {
 
+});
+
+/** 
+ * @route DELETE api/photos/upload/id
+ * @desc Deletes an item
+ * @access Private
+ */
+router.delete('/delete/:id', (req, res) => {
+    let id = req.params.id;
+    let foundDocument = PhotoSchema.findById(id)
+    console.log(foundDocument)
 })
 
 module.exports = router;

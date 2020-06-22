@@ -7,12 +7,7 @@ const state = {
 
 const getters = {
   uploadState: state => state.status,
-  items: state => state.items,
-  dbImages: state => {
-    for (let db of state.items) {
-      return db.selectedFlickrImage
-    }
-  }
+  items: state => state.items
 }
 
 const actions = {
@@ -48,6 +43,17 @@ const actions = {
       commit('put_item_success')
     }
     return res
+  },
+
+  deleteItem ({
+    commit
+  }, id) {
+    commit('delete_item')
+    let res = axios.delete('https://localhost:3000/api/photos/delete/' + id)
+    if (res.data.success !== undefined) {
+      commit('delete_item_success')
+    }
+    return res
   }
 }
 
@@ -69,6 +75,13 @@ const mutations = {
   },
   put_item_success (state) {
     state.status = 'success'
+  },
+  delete_item (state) {
+    state.staus = 'loading'
+  },
+  delete_item_success (state, id) {
+    let index = state.items.findIndex(item => item.id === id)
+    state.items.splice(index, 1)
   }
 }
 

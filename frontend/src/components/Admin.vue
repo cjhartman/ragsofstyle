@@ -8,7 +8,7 @@
       </div>
     </header>
     <div class="admin-content">
-      <form class="upload-form-group" v-on:submit.prevent>
+      <form class="upload-form-group" @submit.prevent="checkForm">
         <div class="input-content">
           <div class="input-content-items">
             <label for="title">Title</label>
@@ -79,6 +79,11 @@
                 <label class="db-checkbox-label" v-for="item in flickerItems" :key="item.id">
                   <input type="checkbox" :id="item._id" :value="item" v-model="dbSelectedItem" @change="editPost()">
                   <span class="db-checkbox" :for="item._id"></span>
+                  <div class="secondary-button-container delete-button">
+                    <button type="button" class="secondary-button-btn" @click="deleteItemFromDb(item._id)">
+                      X
+                    </button>
+                  </div>
                 </label>
               </li>
               <li class="db-list">
@@ -93,13 +98,21 @@
           <button class="secondary-button-btn" type="submit" @click="uploadEditPhotos" :disabled="isDisable">{{ uploadEdit }}</button>
         </div>
       </form>
+      <div v-if="errors.length">
+        <p>Please fix the following issues:</p>
+        <ul>
+          <li v-for="error in errors" :key="error">
+            <p>{{ error }}</p>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import getPhotos from '../services/FlickrService'
-import Upload from '../warehouse/Upload'
+import Items from '../warehouse/Items'
 import { mapGetters, mapActions } from 'vuex'
 export default {
   data () {
@@ -123,7 +136,8 @@ export default {
       dbSelectedItem: [],
       updateSelectedItem: '',
       showImages: [],
-      isDisable: false
+      isDisable: false,
+      errors: []
     }
   },
   computed: {
@@ -135,7 +149,8 @@ export default {
       'getAdminProfile',
       'upload',
       'getItem',
-      'revise'
+      'revise',
+      'deleteItem'
     ]),
     logoutUser () {
       this.logout()
@@ -148,7 +163,7 @@ export default {
     fetchImages () {
       return getPhotos('people.getPhotos').then((response) => {
         this.flickrImages = response.data.photos.photo
-        this.flickerItems = Upload.state.items
+        this.flickerItems = Items.state.items
         this.showDbFlickrImage()
       })
     },
@@ -177,6 +192,26 @@ export default {
     },
     deleteProductDetail (index) {
       this.extras.splice(index, 1)
+    },
+    checkForm () {
+      if (!this.title) {
+        this.errors.push('Missing Title')
+      }
+      if (!this.color) {
+        this.errors.push('Missing Color')
+      }
+      if (!this.size) {
+        this.errors.push('Missing Size')
+      }
+      if (!this.description) {
+        this.errors.push('Missing Description')
+      }
+      if (!this.price) {
+        this.errors.push('Missing Price')
+      }
+      if (!this.selectedImages) {
+        this.errors.push('Missing Image(s)')
+      }
     },
     uploadEditPhotos () {
       if (this.uploadEdit === 'Upload Post') {
@@ -217,13 +252,22 @@ export default {
           secret: this.secret
         }
         this.revise(photos).then(res => {
-          if (res.status === 201) {
-            console.log('it has been updated')
+          if (res.status === 200) {
+            this.$router.go()
           }
         }).catch(err => {
           console.log(err)
         })
       }
+    },
+    deleteItemFromDb (uid) {
+      this.deleteItem(uid).then(res => {
+        if (res.status === 200) {
+          this.$router.go()
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     },
     getMetaDataFromImage () {
       for (let selected of this.selectedImages) {
@@ -274,8 +318,8 @@ export default {
       this.size = ''
       this.description = ''
       this.price = ''
-      this.extras = ''
-      this.sale = ''
+      this.extras = []
+      this.sale = false
       this.selectedImages = []
     }
   },
@@ -510,6 +554,8 @@ export default {
 
       .db-image-container {
         display: flex;
+        max-height: 500px;
+        overflow-y: scroll;
 
         .db-list {
           display: flex;
@@ -532,7 +578,20 @@ export default {
             user-select: none;
             width: 30px;
             margin: 0 10px 5px 0;
-            height: 200px;
+            min-height: 200px;
+
+            .delete-button {
+              margin-top: 30px;
+              width: 24px;
+
+              .secondary-button-btn {
+                width: 24px;
+                height: 24px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              }
+            }
           }
 
           .db-checkbox-label .db-checkbox {
