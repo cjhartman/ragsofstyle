@@ -70,7 +70,7 @@
             </ul>
           </div>
           <div class="db-images-content">
-            <p>These are your published posts - click post to edit</p>
+            <p>These are your published posts - select only one checkbox to edit</p>
             <p v-if="loading">
               Loading...
             </p>
@@ -90,7 +90,7 @@
           </div>
         </div>
         <div class="secondary-button-container">
-          <button class="secondary-button-btn" type="submit" @click="uploadEditPhotos">{{ uploadEdit }}</button>
+          <button class="secondary-button-btn" type="submit" @click="uploadEditPhotos" :disabled="isDisable">{{ uploadEdit }}</button>
         </div>
       </form>
     </div>
@@ -122,7 +122,8 @@ export default {
       uploadEdit: 'Upload Post',
       dbSelectedItem: [],
       updateSelectedItem: '',
-      showImages: []
+      showImages: [],
+      isDisable: false
     }
   },
   computed: {
@@ -167,7 +168,6 @@ export default {
         dbServerId = item.serverId
         this.showImages.push('https://farm' + dbFarmId + '.staticflickr.com/' + dbServerId + '/' + dbImageId + '_' + dbSecretId + '.jpg')
       }
-      console.log(this.showImages)
       return this.showImages
     },
     addProductDetail () {
@@ -234,7 +234,13 @@ export default {
       }
     },
     editPost () {
-      if (this.dbSelectedItem.length) {
+      if (this.dbSelectedItem.length > 1) {
+        this.unpopulateFields()
+        this.isDisable = true
+        this.uploadEdit = 'Please unselect one published post'
+        return this.uploadEdit
+      }
+      if (this.dbSelectedItem.length === 1) {
         this.uploadEdit = 'Update Post'
         this.populateFields()
         return this.uploadEdit
@@ -636,12 +642,12 @@ export default {
       display: flex;
 
       &-items {
-        width: 30%;
+        width: 40%;
         margin-right: 30px;
       }
 
       &-images {
-        width: 30%;
+        width: 60%;
         margin-right: 30px;
       }
     }
