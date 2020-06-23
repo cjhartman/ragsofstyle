@@ -91,7 +91,16 @@ router.put('/upload/:id', (req, res) => {
  */
 router.delete('/delete/:id', (req, res) => {
     let id = req.params.id;
-    PhotoSchema.deleteOne({ _id: )
+    PhotoSchema.deleteOne({ _id: id}, (err, deleted) => {
+        if (err) {
+            console.log(err)
+        } else {
+            return res.status(204).json({
+                success: true,
+                msg: "Item has been deleted"
+            })
+        }
+    })
 })
 
 module.exports = router;

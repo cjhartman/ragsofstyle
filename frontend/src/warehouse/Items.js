@@ -45,11 +45,11 @@ const actions = {
     return res
   },
 
-  deleteItem ({
+  async deleteItem ({
     commit
   }, id) {
     commit('delete_item')
-    let res = axios.delete('https://localhost:3000/api/photos/delete/' + id)
+    let res = await axios.delete('https://localhost:3000/api/photos/delete/' + id)
     if (res.data.success !== undefined) {
       commit('delete_item_success')
     }

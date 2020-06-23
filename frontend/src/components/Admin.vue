@@ -107,14 +107,19 @@
         </ul>
       </div>
     </div>
+    <modal v-model="modalOpen" :id="childId"></modal>
   </div>
 </template>
 
 <script>
 import getPhotos from '../services/FlickrService'
 import Items from '../warehouse/Items'
+import Modal from './Modal'
 import { mapGetters, mapActions } from 'vuex'
 export default {
+  components: {
+    Modal
+  },
   data () {
     return {
       loading: false,
@@ -137,7 +142,9 @@ export default {
       updateSelectedItem: '',
       showImages: [],
       isDisable: false,
-      errors: []
+      errors: [],
+      modalOpen: false,
+      childId: ''
     }
   },
   computed: {
@@ -261,13 +268,11 @@ export default {
       }
     },
     deleteItemFromDb (uid) {
-      this.deleteItem(uid).then(res => {
-        if (res.status === 200) {
-          this.$router.go()
-        }
-      }).catch(err => {
-        console.log(err)
-      })
+      this.openDeleteModal(uid)
+    },
+    openDeleteModal (uid) {
+      this.childId = uid
+      this.modalOpen = !this.modalOpen
     },
     getMetaDataFromImage () {
       for (let selected of this.selectedImages) {
