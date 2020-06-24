@@ -49,7 +49,8 @@ const router = new Router({
     {
       path: '/view-item',
       name: 'View Item',
-      component: () => import('../components/ViewItem.vue')
+      component: () => import('../components/ViewItem.vue'),
+      props: true
     },
     // No route here, get lost bozo
     {

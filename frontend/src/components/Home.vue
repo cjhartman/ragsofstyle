@@ -20,8 +20,14 @@
             Loading...
         </p>
         <ul v-else>
-          <li v-for="image in images" :key="image.id">
-            <a><img :src="image.url_n"></a>
+          <li>
+            <router-link v-for="dbImage in showImages" :key="dbImage" to="/view-item">
+              <img class="db-flickr-image" :src="dbImage">
+            </router-link>
+            <div v-for="item in flickerItems" :key="item.id">
+              <div>{{ item.title }}</div>
+              <div>${{ item.price }}</div>
+            </div>
           </li>
         </ul>
       </div>
@@ -48,27 +54,58 @@
 
 <script>
 import getPhotos from '../services/FlickrService'
+import Items from '../warehouse/Items'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   data () {
     return {
       loading: false,
-      images: []
+      images: [],
+      flickrImages: [],
+      flickerItems: [],
+      showImages: []
     }
   },
+  computed: {
+    ...mapGetters(['items'])
+  },
   methods: {
+    ...mapActions([
+      'getItem'
+    ]),
     search () {
       this.loading = true
       this.fetchImages()
       this.loading = false
     },
     fetchImages () {
-      return getPhotos('people.getPublicPhotos', {
-        page: 1,
-        per_page: 30
-      }).then((response) => {
-        this.images = response.data.photos.photo
+      return getPhotos('people.getPhotos').then((response) => {
+        this.flickrImages = response.data.photos.photo
+        this.flickerItems = Items.state.items
+        this.showDbFlickrImage()
       })
+    },
+    showDbFlickrImage () {
+      let dbImageId
+      let dbSecretId
+      let dbFarmId
+      let dbServerId
+      for (let item of this.flickerItems) {
+        for (let firstImageInArray of item.selectedFlickrImage) {
+          dbImageId = firstImageInArray
+        }
+        for (let firstSecretInArray of item.secret) {
+          dbSecretId = firstSecretInArray
+        }
+        dbFarmId = item.farmId
+        dbServerId = item.serverId
+        this.showImages.push('https://farm' + dbFarmId + '.staticflickr.com/' + dbServerId + '/' + dbImageId + '_' + dbSecretId + '.jpg')
+      }
+      return this.showImages
     }
+  },
+  created () {
+    this.getItem()
   },
   beforeMount () {
     this.fetchImages()
@@ -145,9 +182,10 @@ export default {
         li {
           padding: 10px 0;
 
-          img {
-            max-height: 100%;
-            max-width: 100%
+          a {
+            img {
+              width: 100%;
+            }
           }
         }
       }

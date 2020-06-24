@@ -1,29 +1,29 @@
 <template>
   <div class="view-item-container">
-    <section class="view-item">
+    <section class="view-item" v-for="image in sellingImage" :key="image.id">
       <div class="clothing-large">
 
       </div>
       <div class="clothing-content">
-        <h2>Name of Item</h2>
-        <p>$ <span>Price</span></p>
+        <h2>{{ image.title }}</h2>
+        <p>$ <span>{{image.price}}</span></p>
         <p>
           <span>Main color:</span>
-          <span>Color</span>
+          <span>{{ image.color }}</span>
         </p>
         <p>
           <span>Size:</span>
-          <span>The size</span>
+          <span>{{ image.size }}</span>
         </p>
         <div class="secondary-button-container">
           <button class="secondary-button-btn">Add To Cart</button>
         </div>
         <p>*All payments processed through Paypal</p>
         <p>Description:</p>
-        <p>Dynamica Desc</p>
+        <p>{{ image.description }}</p>
         <p>Product Details:</p>
         <ul>
-          <li>dynamic details</li>
+          <li v-for="detail in image" :key="detail">{{ detail }}</li>
         </ul>
       </div>
     </section>
@@ -35,6 +35,7 @@
 import MayLike from './MayLike'
 import getPhotos from '../services/FlickrService'
 export default {
+  props: ['flickerItems'],
   components: {
     MayLike
   },
@@ -44,7 +45,8 @@ export default {
   data () {
     return {
       loading: false,
-      images: []
+      images: [],
+      sellingImage: []
     }
   },
   methods: {
@@ -68,6 +70,11 @@ export default {
   beforeMount () {
     this.fetchImages()
     this.scrollTop()
+  },
+  mounted () {
+    if (this.flickerItems) {
+      this.sellingImage = this.flickerItems
+    }
   }
 }
 </script>

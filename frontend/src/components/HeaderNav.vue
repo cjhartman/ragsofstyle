@@ -3,7 +3,7 @@
     <nav class="navbar-container">
       <div class="navbar">
         <router-link to="/home">
-          <img class="ros-img" src="../assets/ros-logo-black.svg"/>
+          <img class="ros-img" src="../assets/ros-logo-cream-black.svg"/>
         </router-link>
         <div class="hamburger-icon-container" @click="isShowNav = !isShowNav">
           <div class="hamburger-icon"></div>
