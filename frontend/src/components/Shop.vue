@@ -23,13 +23,15 @@
             Loading...
         </p>
         <ul v-else>
-          <li>
-            <router-link v-for="dbImage in showImages" :key="dbImage" :to="{ name: 'View Item', params: { flickerItems }}">
-              <img class="db-flickr-image" :src="dbImage">
+          <li v-for="dbImage in showImages" :key="dbImage.title">
+            <router-link to="">
+              <img class="db-flickr-image" :src="dbImage.url">
             </router-link>
-            <div v-for="item in flickerItems" :key="item.id">
-              <div>{{ item.title }}</div>
-              <div>$ {{ item.price }}</div>
+            <div class="item-title-price">
+              <div class="item-title-price-content">
+                <p class="item-title">{{ dbImage.title }}</p>
+                <p>$ {{ dbImage.price }}</p>
+              </div>
             </div>
           </li>
         </ul>
@@ -76,6 +78,9 @@ export default {
       let dbSecretId
       let dbFarmId
       let dbServerId
+      let dbPrice
+      let dbTitle
+      let itemObj = {}
       for (let item of this.flickerItems) {
         for (let firstImageInArray of item.selectedFlickrImage) {
           dbImageId = firstImageInArray
@@ -85,7 +90,10 @@ export default {
         }
         dbFarmId = item.farmId
         dbServerId = item.serverId
-        this.showImages.push('https://farm' + dbFarmId + '.staticflickr.com/' + dbServerId + '/' + dbImageId + '_' + dbSecretId + '.jpg')
+        dbPrice = item.price
+        dbTitle = item.title
+        itemObj = Object.assign({"price": item.price, "title": item.title, "url": 'https://farm' + dbFarmId + '.staticflickr.com/' + dbServerId + '/' + dbImageId + '_' + dbSecretId + '.jpg'})
+        this.showImages.push(itemObj)
       }
       return this.showImages
     }
@@ -211,6 +219,11 @@ export default {
 
           li {
             padding: 20px 20px 0 0;
+
+            .item-title-price {
+              display: flex;
+              max-width: 350px;
+            }
 
             img {
               min-width: 250px;
