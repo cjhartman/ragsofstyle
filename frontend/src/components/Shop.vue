@@ -78,8 +78,6 @@ export default {
       let dbSecretId
       let dbFarmId
       let dbServerId
-      let dbPrice
-      let dbTitle
       let itemObj = {}
       for (let item of this.flickerItems) {
         for (let firstImageInArray of item.selectedFlickrImage) {
@@ -90,9 +88,7 @@ export default {
         }
         dbFarmId = item.farmId
         dbServerId = item.serverId
-        dbPrice = item.price
-        dbTitle = item.title
-        itemObj = Object.assign({"price": item.price, "title": item.title, "url": 'https://farm' + dbFarmId + '.staticflickr.com/' + dbServerId + '/' + dbImageId + '_' + dbSecretId + '.jpg'})
+        itemObj = Object.assign({'id': item._id, 'price': item.price, 'title': item.title, 'url': 'https://farm' + dbFarmId + '.staticflickr.com/' + dbServerId + '/' + dbImageId + '_' + dbSecretId + '.jpg'})
         this.showImages.push(itemObj)
       }
       return this.showImages
@@ -218,7 +214,11 @@ export default {
           flex-flow: wrap;
 
           li {
-            padding: 20px 20px 0 0;
+            padding-top: 20px;
+
+            &:not(:first-of-type) {
+              padding-left: 20px;
+            }
 
             .item-title-price {
               display: flex;
