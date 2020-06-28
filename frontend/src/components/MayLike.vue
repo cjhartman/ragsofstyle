@@ -6,12 +6,16 @@
           Loading...
       </p>
       <ul v-else>
-        <li v-for="image in images" :key="image.id">
-          <router-link to="/view-item">
-            <img :src="image.url_n">
+        <li v-for="dbImage in showImages" :key="dbImage.title">
+          <router-link :to="{ name: 'View Item', params: { id: dbImage.id } }">
+            <img class="db-flickr-image" :src="dbImage.url">
           </router-link>
-          <p class="item-name">{{image.title}}</p>
-          <p>$ <span>Price</span></p>
+          <div class="item-title-price">
+            <div class="item-title-price-content">
+              <p class="item-title">{{ dbImage.title }}</p>
+              <p>$ {{ dbImage.price }}</p>
+            </div>
+          </div>
         </li>
       </ul>
     </div>
@@ -20,30 +24,60 @@
 
 <script>
 import getPhotos from '../services/FlickrService'
+import Items from '../warehouse/Items'
+import { mapGetters, mapActions } from 'vuex'
 export default {
-  created () {
-    this.params = this.$route.params.id
-  },
   data () {
     return {
       loading: false,
-      images: []
+      images: [],
+      flickrImages: [],
+      flickerItems: [],
+      showImages: []
     }
   },
+  computed: {
+    ...mapGetters(['items'])
+  },
   methods: {
+    ...mapActions([
+      'getItem'
+    ]),
     search () {
       this.loading = true
       this.fetchImages()
       this.loading = false
     },
     fetchImages () {
-      return getPhotos('people.getPublicPhotos', {
-        page: 1,
-        per_page: 30
-      }).then((response) => {
-        this.images = response.data.photos.photo
+      return getPhotos('people.getPhotos').then((response) => {
+        this.flickrImages = response.data.photos.photo
+        this.flickerItems = Items.state.items
+        this.showDbFlickrImage()
       })
+    },
+    showDbFlickrImage () {
+      let dbImageId
+      let dbSecretId
+      let dbFarmId
+      let dbServerId
+      let itemObj = {}
+      for (let item of this.flickerItems) {
+        for (let firstImageInArray of item.selectedFlickrImage) {
+          dbImageId = firstImageInArray
+        }
+        for (let firstSecretInArray of item.secret) {
+          dbSecretId = firstSecretInArray
+        }
+        dbFarmId = item.farmId
+        dbServerId = item.serverId
+        itemObj = Object.assign({'id': item._id, 'price': item.price, 'title': item.title, 'url': 'https://farm' + dbFarmId + '.staticflickr.com/' + dbServerId + '/' + dbImageId + '_' + dbSecretId + '.jpg'})
+        this.showImages.push(itemObj)
+      }
+      return this.showImages
     }
+  },
+  created () {
+    this.getItem()
   },
   beforeMount () {
     this.fetchImages()

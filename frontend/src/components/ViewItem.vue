@@ -1,6 +1,6 @@
 <template>
   <div class="view-item-container">
-    <section class="view-item" v-for="image in sellingImage" :key="image.id">
+    <section class="view-item">
       <div class="clothing-container">
         <img class="clothing-large-image" id="largeImage" :src="largeImg"/>
         <div class="clothing-large-thumb">
@@ -14,25 +14,27 @@
         </div>
       </div>
       <div class="clothing-content">
-        <h2 class="view-item-title">{{ image.title }}</h2>
-        <p class="view-item-price">$ <span>{{image.price}}</span></p>
+        <h2 class="view-item-title">{{ sellingImage.title }}</h2>
+        <p class="view-item-price">$ <span>{{ sellingImage.price }}</span></p>
         <p>
           <span class="view-item-color">Main color:</span>
-          <span class="view-item-color-">{{ image.color }}</span>
+          <span class="view-item-color-content">{{ sellingImage.color }}</span>
         </p>
         <p>
           <span class="view-item-size">Size:</span>
-          <span>{{ image.size }}</span>
+          <span class="view-item-size-content">{{ sellingImage.size }}</span>
         </p>
         <div class="secondary-button-container">
           <button class="secondary-button-btn">Add To Cart</button>
         </div>
         <p class="view-item-processed">*All payments processed through Paypal</p>
         <p class="view-item-desc">Description:</p>
-        <p>{{ image.description }}</p>
+        <p class="view-item-desc-content">{{ sellingImage.description }}</p>
         <p class="view-item-details">Product Details:</p>
         <ul>
-          <li v-for="detail in image.extras" :key="detail.id">- {{ detail }}</li>
+          <li v-for="detail in sellingImage.extras" :key="detail.id">
+            <p class="view-item-extras-content">- {{ detail.value }}</p>
+          </li>
         </ul>
       </div>
     </section>
@@ -43,13 +45,11 @@
 <script>
 import MayLike from './MayLike'
 import getPhotos from '../services/FlickrService'
+import Items from '../warehouse/Items'
+import { mapGetters, mapActions } from 'vuex'
 export default {
-  props: ['flickerItems'],
   components: {
     MayLike
-  },
-  created () {
-    this.params = this.$route.params.id
   },
   data () {
     return {
@@ -58,21 +58,28 @@ export default {
       sellingImage: [],
       combinedImage: [],
       imageSrc: [],
-      largeImg: ''
+      flickerItems: [],
+      largeImg: '',
+      id: 0,
+      debug: false
     }
   },
+  computed: {
+    ...mapGetters(['items'])
+  },
   methods: {
+    ...mapActions([
+      'getItem'
+    ]),
     search () {
       this.loading = true
       this.fetchImages()
       this.loading = false
     },
     fetchImages () {
-      return getPhotos('people.getPublicPhotos', {
-        page: 1,
-        per_page: 30
-      }).then((response) => {
+      return getPhotos('people.getPublicPhotos').then((response) => {
         this.images = response.data.photos.photo
+        this.grabPic()
         this.showDBImages()
         this.getImageSrc()
         this.largeImg = this.imageSrc[0]
@@ -82,16 +89,14 @@ export default {
       window.scrollTo(0, 0)
     },
     showDBImages () {
-      for (let item of this.sellingImage) {
-        this.combinedImage = item.selectedFlickrImage.map((value, index) => {
-          return {
-            id: value,
-            secret: item.secret[index],
-            farm: item.farmId,
-            server: item.serverId
-          }
-        })
-      }
+      this.combinedImage = this.sellingImage.selectedFlickrImage.map((value, index) => {
+        return {
+          id: value,
+          secret: this.sellingImage.secret[index],
+          farm: this.sellingImage.farmId,
+          server: this.sellingImage.serverId
+        }
+      })
     },
     getImageSrc () {
       this.combinedImage.forEach(combine => {
@@ -99,18 +104,24 @@ export default {
       })
       return this.imageSrc
     },
+    grabPic () {
+      Items.state.items.forEach((image) => {
+        if (this.id === image._id) {
+          this.sellingImage = image
+        }
+      })
+    },
     setChangeImage (img) {
       this.largeImg = img
     }
   },
+  created () {
+    this.getItem()
+    this.id = this.$route.params.id
+  },
   beforeMount () {
     this.fetchImages()
     this.scrollTop()
-  },
-  mounted () {
-    if (this.flickerItems) {
-      this.sellingImage = this.flickerItems
-    }
   }
 }
 </script>
@@ -149,6 +160,16 @@ export default {
     .clothing-content {
       .view-item-price {
         font-size: 1.5rem;
+      }
+      .view-item-color-content,
+      .view-item-size-content,
+      .view-item-desc-content,
+      .view-item-extras-content {
+        font-size: 1.25rem;
+      }
+
+      .view-item-extras-content {
+        margin: 0;
       }
     }
   }

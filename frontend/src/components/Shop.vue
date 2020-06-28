@@ -24,7 +24,7 @@
         </p>
         <ul v-else>
           <li v-for="dbImage in showImages" :key="dbImage.title">
-            <router-link to="">
+            <router-link :to="{ name: 'View Item', params: { id: dbImage.id } }">
               <img class="db-flickr-image" :src="dbImage.url">
             </router-link>
             <div class="item-title-price">

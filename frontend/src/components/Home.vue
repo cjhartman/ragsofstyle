@@ -20,13 +20,15 @@
             Loading...
         </p>
         <ul v-else>
-          <li>
-            <router-link v-for="dbImage in showImages" :key="dbImage" to="/view-item">
-              <img class="db-flickr-image" :src="dbImage">
+         <li v-for="dbImage in showImages" :key="dbImage.title">
+            <router-link :to="{ name: 'View Item', params: { id: dbImage.id } }">
+              <img class="db-flickr-image" :src="dbImage.url">
             </router-link>
-            <div v-for="item in flickerItems" :key="item.id">
-              <div>{{ item.title }}</div>
-              <div>${{ item.price }}</div>
+            <div class="item-title-price">
+              <div class="item-title-price-content">
+                <p class="item-title">{{ dbImage.title }}</p>
+                <p>$ {{ dbImage.price }}</p>
+              </div>
             </div>
           </li>
         </ul>
@@ -90,6 +92,7 @@ export default {
       let dbSecretId
       let dbFarmId
       let dbServerId
+      let itemObj = {}
       for (let item of this.flickerItems) {
         for (let firstImageInArray of item.selectedFlickrImage) {
           dbImageId = firstImageInArray
@@ -99,7 +102,8 @@ export default {
         }
         dbFarmId = item.farmId
         dbServerId = item.serverId
-        this.showImages.push('https://farm' + dbFarmId + '.staticflickr.com/' + dbServerId + '/' + dbImageId + '_' + dbSecretId + '.jpg')
+        itemObj = Object.assign({'id': item._id, 'price': item.price, 'title': item.title, 'url': 'https://farm' + dbFarmId + '.staticflickr.com/' + dbServerId + '/' + dbImageId + '_' + dbSecretId + '.jpg'})
+        this.showImages.push(itemObj)
       }
       return this.showImages
     }

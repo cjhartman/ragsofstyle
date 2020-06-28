@@ -43,7 +43,7 @@
           <a>Contact</a>
         </div>
         <div>
-          <img class="insta-icon" src="../assets/insta_icon.png"/>
+          <img class="insta-icon" src="../assets/insta-icon.svg"/>
         </div>
       </div>
     </footer>
@@ -129,9 +129,9 @@ export default {
 
 @media (min-width: 768px) {
   .footer-container {
-  padding: 3rem 8rem;
-  font-size: 100%;
-  background-color: #252422;
+    padding: 3rem 8rem;
+    font-size: 100%;
+    background-color: #252422;
 
     .footer-content {
       display: flex;

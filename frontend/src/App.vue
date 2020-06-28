@@ -26,9 +26,10 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   width: 100%;
+  height: 100%;
 
   #content {
-    min-height: 67vh;
+    min-height: 68vh;
   }
 }
 </style>
