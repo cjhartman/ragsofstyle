@@ -32,7 +32,7 @@
         <div>
           <ul>
             <li class="header-for-footer follow-us">Follow Us On Instagram</li>
-            <li><a class="footer-link">@ragsofstyle</a></li>
+            <li><a class="footer-link" href="https://www.instagram.com/ragsofstyle/">@ragsofstyle</a></li>
           </ul>
         </div>
       </div>

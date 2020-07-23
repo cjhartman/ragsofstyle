@@ -5,7 +5,7 @@
         <router-link to="/home">
           <img class="ros-img" src="../assets/ros-logo-cream-black.svg"/>
         </router-link>
-        <div class="hamburger-icon-container" @click="isShowNav = !isShowNav">
+        <div v-bind:class="{ 'hamburger-active': isShowNav }" class="hamburger-icon-container" @click="isShowNav = !isShowNav">
           <div class="hamburger-icon"></div>
         </div>
         <div class="links">
@@ -20,7 +20,7 @@
     <transition name="slide">
       <div class="hidden-nav" v-if="isShowNav">
         <ul class="hidden-nav-links">
-          <li class="hidden-nav-links-items" v-for="routes in links" :key="routes.id">
+          <li class="hidden-nav-links-items" v-for="routes in links" :key="routes.id" @click="isShowNav = !isShowNav">
             <router-link
               :to="`${routes.page}`">{{ routes.text }}
             </router-link>
@@ -82,7 +82,7 @@ export default {
     .hamburger-icon-container {
       width: 40px;
       cursor: pointer;
-      z-index: 6;
+      z-index: 100;
 
       &:before,
       &:after {
@@ -104,16 +104,18 @@ export default {
         margin: 6px 0;
         transition: all .2s ease-in-out;
       }
+    }
 
-      &:hover:before {
+    .hamburger-active {
+      &:before {
         transform: translateY(10px) rotate(135deg);
       }
 
-      &:hover:after {
+      &:after {
         transform: translateY(-10px) rotate(-135deg);
       }
 
-      &:hover .hamburger-icon {
+      .hamburger-icon {
         transform: scale(0);
       }
     }
@@ -159,7 +161,7 @@ export default {
   justify-content: center;
   align-items: center;
   background-color: #fec23b;
-  z-index: 5;
+  z-index: 99;
 
   &-links {
     font-size: 4rem;

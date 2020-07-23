@@ -41,6 +41,9 @@ app.use('/api/users', users);
 const photos = require('./routes/api/photos');
 app.use('/api/photos', photos);
 
+const cart = require('./routes/api/cart');
+app.use('/api/cart', cart);
+
 // Port to listen on
 https.createServer(options, app).listen(port, () => {
     console.log('Express server listening on port ' + port);

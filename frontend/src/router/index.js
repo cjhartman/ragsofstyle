@@ -51,6 +51,11 @@ const router = new Router({
       name: 'View Item',
       component: () => import('../components/ViewItem.vue')
     },
+    {
+      path: '/cart',
+      name: 'Cart',
+      component: () => import('../components/Cart.vue')
+    },
     // No route here, get lost bozo
     {
       path: '*',

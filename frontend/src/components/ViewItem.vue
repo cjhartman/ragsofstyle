@@ -25,7 +25,7 @@
           <span class="view-item-size-content">{{ sellingImage.size }}</span>
         </p>
         <div class="secondary-button-container">
-          <button class="secondary-button-btn">Add To Cart</button>
+          <button class="secondary-button-btn" @click="addItemToCart(sellingImage)">{{ cartBtnText }}</button>
         </div>
         <p class="view-item-processed">*All payments processed through Paypal</p>
         <p class="view-item-desc">Description:</p>
@@ -46,6 +46,7 @@
 import MayLike from './MayLike'
 import getPhotos from '../services/FlickrService'
 import Items from '../warehouse/Items'
+import Checkout from '../warehouse/Checkout'
 import { mapGetters, mapActions } from 'vuex'
 export default {
   components: {
@@ -61,15 +62,18 @@ export default {
       flickerItems: [],
       largeImg: '',
       id: 0,
-      debug: false
+      isItemAddedToCart: false,
+      cartBtnText: 'Add To Cart'
     }
   },
   computed: {
-    ...mapGetters(['items'])
+    ...mapGetters(['items', 'cart'])
   },
   methods: {
     ...mapActions([
-      'getItem'
+      'getItem',
+      'addToCart',
+      'getCart'
     ]),
     search () {
       this.loading = true
@@ -113,10 +117,33 @@ export default {
     },
     setChangeImage (img) {
       this.largeImg = img
+    },
+    addItemToCart (item) {
+      let cartItem = {
+        title: item.title,
+        color: item.color,
+        size: item.size,
+        price: item.price,
+        selectedFlickrImage: item.selectedFlickrImage,
+        dateAdded: item.dateAdded,
+        sale: item.sale,
+        serverId: item.serverId,
+        farmId: item.farmId,
+        secret: item.secret,
+        _id: item._id
+      }
+      this.addToCart(cartItem).then(res => {
+        if (res.status === 201) {
+          this.isItemAddedToCart = true
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     }
   },
   created () {
     this.getItem()
+    this.getCart()
     this.id = this.$route.params.id
   },
   beforeMount () {
