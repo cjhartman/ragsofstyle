@@ -30,6 +30,7 @@
         </div>
       </div>
       <div class="cart-total">
+        <p class="paypal-message">{{ paypalMessage }}</p>
         <p>
           <span>SUB-TOTAL</span>
           <span>${{ totalCartPrice }}</span>
@@ -44,15 +45,16 @@
           <span>TOTAL</span>
           <span>${{ totalCartPrice }}</span>
         </p>
-        <div class="secondary-button-container">
-          <paypal-checkout
-            amount="10.00"
-            currency="USD"
-            :client="paypal"
-            env="sandbox">
-          </paypal-checkout>
-          <button class="secondary-button-btn" @click="checkout()">Checkout with PayPal</button>
-        </div>
+        <PayPal
+          :amount="paypalCartPrice"
+          currency="USD"
+          :client="paypal"
+          :button-style="myStyle"
+          env="sandbox"
+          @payment-authorized="payment_authorized_cb"
+          @payment-completed="payment_completed_cb"
+          @payment-cancelled="payment_cancelled_cb">
+        </PayPal>
       </div>
     </section>
   </main>
@@ -60,17 +62,39 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import PayPal from 'vue-paypal-checkout'
 export default {
   data () {
     return {
       itemsInCart: [],
       cartImg: '',
       totalCartPrice: 0,
+      paypalCartPrice: '',
+      paypalMessage: '',
       paypal: {
-        sandbox: 'env',
+        sandbox: 'ASg_2GUBjGIyaMFQ1xIWhyhEvfJhYBqdluq5odsldEChwiPRWn8dTU2S34JCVNJZ3rTaz2s_6_1arcrb',
         production: '<production client id>'
+      },
+      myStyle: {
+        shape: 'rect',
+        color: 'gold'
+      },
+      payment_completed: {
+        payment_completed_cb () {
+        }
+      },
+      payment_authorized: {
+        payment_authorized_cb () {
+        }
+      },
+      payment_cancelled: {
+        payment_cancelled_cb () {
+        }
       }
     }
+  },
+  components: {
+    PayPal
   },
   computed: {
     ...mapGetters(['cart'])
@@ -84,6 +108,7 @@ export default {
       for (let price of this.cart) {
         this.totalCartPrice += parseInt(price.price)
       }
+      this.paypalCartPrice = this.totalCartPrice.toString()
     },
     checkout () {
       console.log('poop')
@@ -94,6 +119,20 @@ export default {
           this.$router.go()
         }
       })
+    },
+    payment_completed_cb (res, planName) {
+      this.paypalMessage = '* Thank you for your payment! We will send you an invoice to your email soon.'
+      setTimeout(() => {
+        this.paypalMessage = ''
+      }, 3000)
+    },
+    payment_authorized_cb (res) {
+    },
+    payment_cancelled_cb (res) {
+      this.paypalMessage = '* Your payment has been cancelled. Your card is not charged.'
+      setTimeout(() => {
+        this.paypalMessage = ''
+      }, 4000)
     }
   },
   created () {
@@ -197,6 +236,10 @@ export default {
       text-align: right;
       font-size: 1.5rem;
       margin-bottom: 100px;
+
+      .paypal-message {
+        color: #fec23b;
+      }
 
       .secondary-button-container {
         max-width: 300px;
