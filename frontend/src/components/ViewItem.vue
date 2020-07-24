@@ -25,7 +25,7 @@
           <span class="view-item-size-content">{{ sellingImage.size }}</span>
         </p>
         <div class="secondary-button-container">
-          <button class="secondary-button-btn" @click="addItemToCart(sellingImage)">{{ cartBtnText }}</button>
+          <button class="secondary-button-btn" v-bind:class="{ 'disabled': isItemAddedToCart }" @click="addItemToCart(sellingImage)" :disabled="isItemAddedToCart">{{ cartBtnText }}</button>
         </div>
         <p class="view-item-processed">*All payments processed through Paypal</p>
         <p class="view-item-desc">Description:</p>
@@ -62,7 +62,7 @@ export default {
       largeImg: '',
       id: 0,
       isItemAddedToCart: false,
-      cartBtnText: 'Add To Cart'
+      cartBtnText: 'Add to cart'
     }
   },
   computed: {
@@ -133,11 +133,20 @@ export default {
       }
       this.addToCart(cartItem).then(res => {
         if (res.status === 201) {
+          this.cartBtnText = 'Item is in your cart'
           this.isItemAddedToCart = true
         }
       }).catch(err => {
         console.log(err)
       })
+    },
+    isItemInCart () {
+      for (let item of this.cart) {
+        if (item._id === this.sellingImage._id) {
+          this.cartBtnText = 'Item is in your cart'
+          this.isItemAddedToCart = true
+        }
+      }
     }
   },
   created () {
@@ -148,6 +157,9 @@ export default {
   beforeMount () {
     this.fetchImages()
     this.scrollTop()
+  },
+  beforeUpdate () {
+    this.isItemInCart()
   }
 }
 </script>
@@ -202,6 +214,11 @@ export default {
 
       .view-item-extras-content {
         margin: 0;
+      }
+
+      .disabled {
+        background-color: #aaa;
+        border: 3px solid #aaa;
       }
     }
   }

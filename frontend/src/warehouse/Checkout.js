@@ -30,6 +30,17 @@ const actions = {
     let res = await axios.get('https://localhost:3000/api/cart/items')
     commit('cart_items_content', res.data.cart)
     return res
+  },
+
+  async removeFromCart ({
+    commit
+  }, id) {
+    commit('remove_from_cart')
+    let res = await axios.delete('https://localhost:3000/api/cart/remove/' + id)
+    if (res.data.success !== undefined) {
+      commit('remove_from_cart_success')
+    }
+    return res
   }
 }
 
@@ -45,6 +56,13 @@ const mutations = {
   },
   cart_items_content (state, cart) {
     state.cart = cart
+  },
+  remove_from_cart (state) {
+    state.staus = 'loading'
+  },
+  remove_from_cart_success (state, id) {
+    let index = state.cart.findIndex(item => item.id === id)
+    state.cart.splice(index, 1)
   }
 }
 

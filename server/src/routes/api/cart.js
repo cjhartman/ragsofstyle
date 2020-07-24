@@ -72,5 +72,24 @@ router.get('/items', (req, res) => {
     })  
 });
 
+/** 
+ * @route DELETE api/cart/delete/id
+ * @desc Removes a cart item
+ * @access Private
+ */
+router.delete('/remove/:id', (req, res) => {
+    let id = req.params.id;
+    CartSchema.deleteOne({ _id: id}, (err, deleted) => {
+        if (err) {
+            console.log(err)
+        } else {
+            return res.status(204).json({
+                success: true,
+                msg: "Item has been removed"
+            })
+        }
+    })
+})
+
 module.exports = router;
  

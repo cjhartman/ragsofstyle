@@ -153,6 +153,11 @@ export default {
         li {
           padding: 10px 0;
 
+          img {
+            min-width: 250px;
+            max-width: 350px;
+          }
+
           .item-name {
             font-weight: 700;
           }

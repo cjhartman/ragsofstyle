@@ -6,7 +6,7 @@
           Loading...
       </p>
       <ul v-else>
-        <li v-for="dbImage in showImages" :key="dbImage.title">
+        <li v-for="dbImage in showImages" :key="dbImage.title" @click="refreshPage">
           <router-link :to="{ name: 'View Item', params: { id: dbImage.id } }">
             <img class="db-flickr-image" :src="dbImage.url">
           </router-link>
@@ -74,6 +74,10 @@ export default {
         this.showImages.push(itemObj)
       }
       return this.showImages
+    },
+    refreshPage () {
+      console.log('here')
+      this.$router.go()
     }
   },
   created () {
@@ -102,6 +106,11 @@ export default {
       justify-content: center;
       li {
         padding-right: 10px;
+
+        img {
+          min-width: 250px;
+          max-width: 350px;
+        }
 
         .item-name {
           font-weight: 700;
