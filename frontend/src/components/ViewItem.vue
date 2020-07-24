@@ -46,7 +46,6 @@
 import MayLike from './MayLike'
 import getPhotos from '../services/FlickrService'
 import Items from '../warehouse/Items'
-import Checkout from '../warehouse/Checkout'
 import { mapGetters, mapActions } from 'vuex'
 export default {
   components: {
@@ -158,6 +157,12 @@ export default {
   padding: 2rem;
   min-height: 62vh;
   .view-item {
+
+    &-color, &-size, &-desc, &-details {
+      font-family: 'Shrikhand', cursive;
+      font-size: 1.25rem;
+    }
+
     .clothing-container {
       text-align: center;
 
