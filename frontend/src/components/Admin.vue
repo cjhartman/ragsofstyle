@@ -113,7 +113,6 @@
 
 <script>
 import getPhotos from '../services/FlickrService'
-import Items from '../warehouse/Items'
 import Modal from './Modal'
 import { mapGetters, mapActions } from 'vuex'
 export default {
@@ -170,7 +169,7 @@ export default {
     fetchImages () {
       return getPhotos('people.getPhotos').then((response) => {
         this.flickrImages = response.data.photos.photo
-        this.flickerItems = Items.state.items
+        this.flickerItems = this.items
         this.showDbFlickrImage()
       })
     },

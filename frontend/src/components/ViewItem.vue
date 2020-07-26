@@ -45,7 +45,6 @@
 <script>
 import MayLike from './MayLike'
 import getPhotos from '../services/FlickrService'
-import Items from '../warehouse/Items'
 import { mapGetters, mapActions } from 'vuex'
 export default {
   components: {
@@ -108,7 +107,7 @@ export default {
       return this.imageSrc
     },
     grabPic () {
-      Items.state.items.forEach((image) => {
+      this.items.forEach((image) => {
         if (this.id === image._id) {
           this.sellingImage = image
         }
@@ -132,7 +131,8 @@ export default {
         _id: item._id
       }
       this.addToCart(cartItem).then(res => {
-        if (res.status === 201) {
+        if (res) {
+          console.log(res)
           this.cartBtnText = 'Item is in your cart'
           this.isItemAddedToCart = true
         }

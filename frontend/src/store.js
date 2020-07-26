@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import persistedState from 'vuex-persistedstate'
 
 import Auth from './warehouse/Auth'
 import Items from './warehouse/Items'
@@ -21,5 +22,6 @@ export default new Vuex.Store({
   },
   actions: {
 
-  }
+  },
+  plugins: [persistedState()]
 })

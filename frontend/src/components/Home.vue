@@ -56,7 +56,6 @@
 
 <script>
 import getPhotos from '../services/FlickrService'
-import Items from '../warehouse/Items'
 import { mapGetters, mapActions } from 'vuex'
 export default {
   data () {
@@ -83,7 +82,7 @@ export default {
     fetchImages () {
       return getPhotos('people.getPhotos').then((response) => {
         this.flickrImages = response.data.photos.photo
-        this.flickerItems = Items.state.items
+        this.flickerItems = this.items
         this.showDbFlickrImage()
       })
     },
