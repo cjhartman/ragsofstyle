@@ -9,11 +9,20 @@
           <div class="hamburger-icon"></div>
         </div>
         <div class="links">
-          <router-link
-            v-for="routes in links"
-            :key="routes.id"
-            :to="`${routes.page}`">{{ routes.text }}
-          </router-link>
+          <div class="links-container">
+            <router-link
+              v-for="routes in links"
+              :key="routes.id"
+              :to="`${routes.page}`">{{ routes.text }}
+            </router-link>
+            <router-link to="/cart">
+              Cart
+              <span>
+                <img class="cart" src="../assets/cart.svg"/>
+                <span class="cart-amount">{{ cartAmount }}</span>
+              </span>
+            </router-link>
+          </div>
         </div>
       </div>
     </nav>
@@ -25,6 +34,14 @@
               :to="`${routes.page}`">{{ routes.text }}
             </router-link>
           </li>
+          <li class="cart-container">
+            <router-link to="/cart" class="cart-link">
+            Cart
+              <span>
+                <span class="cart-amount">{{ cartAmount }}</span>
+              </span>
+            </router-link>
+          </li>
         </ul>
       </div>
     </transition>
@@ -32,6 +49,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'HeaderNav',
   data () {
@@ -51,15 +69,17 @@ export default {
           id: 2,
           text: 'FAQs',
           page: '/faqs'
-        },
-        {
-          id: 3,
-          text: 'Cart',
-          page: '/cart'
         }
       ],
-      isShowNav: false
+      isShowNav: false,
+      cartAmount: 0
     }
+  },
+  computed: {
+    ...mapGetters(['cart'])
+  },
+  created () {
+    this.cartAmount = this.cart.length
   }
 }
 </script>
@@ -82,7 +102,7 @@ export default {
     .hamburger-icon-container {
       width: 40px;
       cursor: pointer;
-      z-index: 100;
+      z-index: 9999;
 
       &:before,
       &:after {
@@ -123,30 +143,54 @@ export default {
     .links {
       display: none;
 
-      a {
-        position: relative;
-        padding: 0 9px 0 10px;
-        z-index: 2;
+      &-container {
 
-        &:not(:last-child) {
-          margin-right: 20px;
+        span {
+          position: relative;
+
+          .cart {
+            height: 16px;
+          }
+
+          .cart-amount {
+            position: absolute;
+            right: -10px;
+            top: -8px;
+            font-size: 14px;
+            color: white;
+            background-color: #e6584c;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            text-align: center;
+          }
         }
 
-        &:hover {
-          color: #e6584c;
-          text-shadow: 0 0 10px #e6584c;
-        }
-      }
+        a {
+          position: relative;
+          padding: 0 9px 0 10px;
+          z-index: 2;
 
-      a.active::before {
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        z-index: -1;
-        background-color: white;
-        content: '';
-        width: 100%;
-        height: 50%;
+          &:not(:last-child) {
+            margin-right: 20px;
+          }
+
+          &:hover {
+            color: #e6584c;
+            text-shadow: 0 0 10px #e6584c;
+          }
+        }
+
+        a.active::before {
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          z-index: -1;
+          background-color: white;
+          content: '';
+          width: 100%;
+          height: 50%;
+        }
       }
     }
   }
@@ -161,10 +205,32 @@ export default {
   justify-content: center;
   align-items: center;
   background-color: #fec23b;
-  z-index: 99;
+  z-index: 9998;
 
   &-links {
     font-size: 4rem;
+
+    .cart-container {
+      display: flex;
+      padding: 1rem;
+
+      .cart-link {
+        display: flex;
+
+        .cart-amount {
+          position: absolute;
+          right: -30px;
+          top: 1px;
+          font-size: 2rem;
+          color: white;
+          background-color: #e6584c;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          text-align: center;
+        }
+      }
+    }
 
     &-items {
       display: block;
@@ -215,6 +281,13 @@ export default {
 
     .links {
       display: block !important;
+      font-size: 1.25rem;
+
+      .container {
+        .cart {
+
+        }
+      }
     }
   }
 }

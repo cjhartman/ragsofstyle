@@ -76,7 +76,8 @@ export default {
       },
       myStyle: {
         shape: 'rect',
-        color: 'gold'
+        color: 'gold',
+        size: 'medium'
       },
       payment_completed: {
         payment_completed_cb () {
