@@ -70,8 +70,7 @@ export default {
   methods: {
     ...mapActions([
       'getItem',
-      'addToCart',
-      'getCart'
+      'addToCart'
     ]),
     search () {
       this.loading = true
@@ -132,26 +131,23 @@ export default {
       }
       this.addToCart(cartItem).then(res => {
         if (res) {
-          console.log(res)
-          this.cartBtnText = 'Item is in your cart'
-          this.isItemAddedToCart = true
+          this.isItemAlreadyInCart()
         }
       }).catch(err => {
         console.log(err)
       })
     },
-    isItemInCart () {
+    isItemAlreadyInCart () {
       for (let item of this.cart) {
         if (item._id === this.sellingImage._id) {
-          this.cartBtnText = 'Item is in your cart'
           this.isItemAddedToCart = true
+          this.cartBtnText = 'Item is in your cart'
         }
       }
     }
   },
   created () {
     this.getItem()
-    this.getCart()
     this.id = this.$route.params.id
   },
   beforeMount () {
@@ -159,7 +155,7 @@ export default {
     this.scrollTop()
   },
   beforeUpdate () {
-    this.isItemInCart()
+    this.isItemAlreadyInCart()
   }
 }
 </script>

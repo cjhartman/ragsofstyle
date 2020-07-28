@@ -51,7 +51,6 @@
           :client="paypal"
           :button-style="myStyle"
           env="sandbox"
-          @payment-authorized="payment_authorized_cb"
           @payment-completed="payment_completed_cb"
           @payment-cancelled="payment_cancelled_cb">
         </PayPal>
@@ -83,10 +82,6 @@ export default {
         payment_completed_cb () {
         }
       },
-      payment_authorized: {
-        payment_authorized_cb () {
-        }
-      },
       payment_cancelled: {
         payment_cancelled_cb () {
         }
@@ -101,7 +96,6 @@ export default {
   },
   methods: {
     ...mapActions([
-      'getCart',
       'removeFromCart'
     ]),
     getTotalPrice () {
@@ -126,8 +120,6 @@ export default {
         this.paypalMessage = ''
       }, 3000)
     },
-    payment_authorized_cb (res) {
-    },
     payment_cancelled_cb (res) {
       this.paypalMessage = '* Your payment has been cancelled. Your card is not charged.'
       setTimeout(() => {
@@ -136,9 +128,6 @@ export default {
     }
   },
   created () {
-    this.getCart()
-  },
-  beforeUpdate () {
     this.getTotalPrice()
   }
 }
