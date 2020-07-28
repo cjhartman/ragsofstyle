@@ -153,8 +153,8 @@ export default {
           padding: 10px 0;
 
           img {
-            min-width: 250px;
-            max-width: 350px;
+            width: 100%;
+            max-width: 400px;
           }
 
           .item-name {
@@ -166,7 +166,7 @@ export default {
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 900px) {
   .shop-container {
     .shop-header {
       padding: 4rem;
@@ -214,14 +214,14 @@ export default {
 
         ul {
           display: flex !important;
-          justify-content: space-between;
+          justify-content: left;
           flex-flow: wrap;
 
           li {
             padding-top: 20px;
 
             &:not(:first-of-type) {
-              padding-left: 20px;
+              padding-left: 50px;
             }
 
             .item-title-price {

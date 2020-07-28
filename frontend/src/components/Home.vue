@@ -277,7 +277,7 @@ export default {
 
         ul {
           display: flex !important;
-          justify-content: space-between;
+          justify-content: center;
           flex-flow: wrap;
 
           li {
@@ -300,7 +300,7 @@ export default {
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1070px) {
   .home-container {
     .hero {
       padding: 6rem 8rem;
@@ -333,10 +333,14 @@ export default {
 
         ul {
           display: flex;
-          justify-content: space-between;
+          justify-content: left;
 
           li {
-            padding-right: 20px;
+            padding-right: 50px;
+
+            img {
+              max-width: 350px;
+            }
           }
         }
       }

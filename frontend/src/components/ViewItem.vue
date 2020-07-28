@@ -220,7 +220,7 @@ export default {
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 900px) {
   .view-item-container {
     padding: 4rem;
     min-height: 53vh;
@@ -258,6 +258,7 @@ export default {
       }
 
       .clothing-content {
+        margin-left: 50px;
         width: 30%;
 
         .view-item {

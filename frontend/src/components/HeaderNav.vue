@@ -19,7 +19,7 @@
               Cart
               <span>
                 <img class="cart" src="../assets/cart.svg"/>
-                <span class="cart-amount">{{ cartAmount }}</span>
+                <span class="cart-amount" v-if="cartLength !== 0" :key="cartLength">{{ cartLength }}</span>
               </span>
             </router-link>
           </div>
@@ -34,11 +34,11 @@
               :to="`${routes.page}`">{{ routes.text }}
             </router-link>
           </li>
-          <li class="cart-container">
+          <li class="cart-container" @click="isShowNav = !isShowNav">
             <router-link to="/cart" class="cart-link">
             Cart
               <span>
-                <span class="cart-amount">{{ cartAmount }}</span>
+                <span class="cart-amount" v-if="cartLength !== 0" :key="cartLength">{{ cartLength }}</span>
               </span>
             </router-link>
           </li>
@@ -71,15 +71,11 @@ export default {
           page: '/faqs'
         }
       ],
-      isShowNav: false,
-      cartAmount: 0
+      isShowNav: false
     }
   },
   computed: {
-    ...mapGetters(['cart'])
-  },
-  created () {
-    this.cartAmount = this.cart.length
+    ...mapGetters(['cart', 'cartLength'])
   }
 }
 </script>

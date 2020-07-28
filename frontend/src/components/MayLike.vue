@@ -102,12 +102,12 @@ export default {
       display: flex;
       flex-flow: wrap;
       justify-content: center;
+
       li {
-        padding-right: 10px;
+        padding: 10px 0;
 
         img {
-          min-width: 250px;
-          max-width: 350px;
+          width: 100%;
         }
 
         .item-name {
@@ -118,7 +118,7 @@ export default {
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 900px) {
   .may-like-container {
     .may-like-header {
       font-size: 1.125rem;
@@ -126,7 +126,16 @@ export default {
 
     .may-like-content {
       ul {
-        justify-content: space-between;
+        justify-content: left;
+        li {
+          &:not(:first-of-type) {
+              padding-left: 50px;
+            }
+
+          img {
+            max-width: 350px;
+          }
+        }
       }
     }
   }

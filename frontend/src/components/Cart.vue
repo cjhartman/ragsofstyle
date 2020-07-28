@@ -110,7 +110,7 @@ export default {
     },
     removeItemFromCart (id) {
       this.removeFromCart(id).then((res) => {
-        if (res.status === 204) {
+        if (res) {
           this.$router.go()
         }
       })
