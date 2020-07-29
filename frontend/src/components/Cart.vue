@@ -30,10 +30,9 @@
         </div>
       </div>
       <div class="cart-total">
-        <p class="paypal-message">{{ paypalMessage }}</p>
         <p>
           <span>SUB-TOTAL</span>
-          <span>${{ totalCartPrice }}</span>
+          <span>${{ cartPrice }}</span>
         </p>
         <p>
           <span>
@@ -43,13 +42,14 @@
         </p>
         <p>
           <span>TOTAL</span>
-          <span>${{ totalCartPrice }}</span>
+          <span>${{ cartPrice }}</span>
         </p>
         <PayPal
-          :amount="paypalCartPrice"
+          :amount="cartPrice.toString()"
           currency="USD"
           :client="paypal"
           :button-style="myStyle"
+          :items="cart"
           env="sandbox"
           @payment-completed="payment_completed_cb"
           @payment-cancelled="payment_cancelled_cb">
@@ -67,9 +67,6 @@ export default {
     return {
       itemsInCart: [],
       cartImg: '',
-      totalCartPrice: 0,
-      paypalCartPrice: '',
-      paypalMessage: '',
       paypal: {
         sandbox: 'ASg_2GUBjGIyaMFQ1xIWhyhEvfJhYBqdluq5odsldEChwiPRWn8dTU2S34JCVNJZ3rTaz2s_6_1arcrb',
         production: '<production client id>'
@@ -80,12 +77,10 @@ export default {
         size: 'medium'
       },
       payment_completed: {
-        payment_completed_cb () {
-        }
+        payment_completed_cb () {}
       },
       payment_cancelled: {
-        payment_cancelled_cb () {
-        }
+        payment_cancelled_cb () {}
       }
     }
   },
@@ -93,43 +88,28 @@ export default {
     PayPal
   },
   computed: {
-    ...mapGetters(['cart'])
+    ...mapGetters(['cart', 'cartPrice'])
   },
   methods: {
     ...mapActions([
-      'removeFromCart'
+      'removeFromCart',
+      'resetCartState'
     ]),
-    getTotalPrice () {
-      for (let price of this.cart) {
-        this.totalCartPrice += parseInt(price.price)
-      }
-      this.paypalCartPrice = this.totalCartPrice.toString()
-    },
-    checkout () {
-      console.log('poop')
-    },
     removeItemFromCart (id) {
-      this.removeFromCart(id).then((res) => {
-        if (res) {
-          this.$router.go()
-        }
-      })
+      this.removeFromCart(id)
     },
     payment_completed_cb (res, planName) {
-      this.paypalMessage = '* Thank you for your payment! We will send you an invoice to your email soon.'
+      this.$router.push('/thank-you')
+      this.resetCartState()
       setTimeout(() => {
         this.paypalMessage = ''
       }, 3000)
     },
     payment_cancelled_cb (res) {
-      this.paypalMessage = '* Your payment has been cancelled. Your card is not charged.'
       setTimeout(() => {
         this.paypalMessage = ''
       }, 4000)
     }
-  },
-  created () {
-    this.getTotalPrice()
   }
 }
 </script>

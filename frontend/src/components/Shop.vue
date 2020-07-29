@@ -111,9 +111,20 @@ export default {
     .img-container {
       position: relative;
 
+      &:after {
+        content: '';
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 99%;
+        top:0;
+        left:0;
+        background:rgba(0,0,0,0.3);
+      }
+
       .shop-img {
         width: 100%;
-        height: 100%;
+        position: relative;
       }
 
       .vintage-clothing {
@@ -123,6 +134,7 @@ export default {
         left: 0;
         padding: 0 20px;
         color: #F8F4F2;
+        z-index: 88;
       }
     }
   }
@@ -174,6 +186,17 @@ export default {
       .img-container {
         position: relative;
         max-height: 600px;
+
+        &:after {
+          content: '';
+          display: block;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top:0;
+          left:0;
+          background:rgba(0,0,0,0.3);
+        }
 
         .shop-img {
           height: 600px;
