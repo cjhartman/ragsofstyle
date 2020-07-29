@@ -45,11 +45,11 @@
           <span>${{ cartPrice }}</span>
         </p>
         <PayPal
-          :amount="cartPrice.toString()"
+          :amount="payPalCartPrice"
           currency="USD"
           :client="paypal"
           :button-style="myStyle"
-          :items="cart"
+          :items="[paypalCheckoutItem]"
           env="sandbox"
           @payment-completed="payment_completed_cb"
           @payment-cancelled="payment_cancelled_cb">
@@ -67,6 +67,7 @@ export default {
     return {
       itemsInCart: [],
       cartImg: '',
+      payPalCartPrice: '',
       paypal: {
         sandbox: 'ASg_2GUBjGIyaMFQ1xIWhyhEvfJhYBqdluq5odsldEChwiPRWn8dTU2S34JCVNJZ3rTaz2s_6_1arcrb',
         production: '<production client id>'
@@ -88,12 +89,13 @@ export default {
     PayPal
   },
   computed: {
-    ...mapGetters(['cart', 'cartPrice'])
+    ...mapGetters(['cart', 'cartPrice', 'paypalCheckoutItem'])
   },
   methods: {
     ...mapActions([
       'removeFromCart',
-      'resetCartState'
+      'resetCartState',
+      'getPayPalCart'
     ]),
     removeItemFromCart (id) {
       this.removeFromCart(id)
@@ -109,6 +111,12 @@ export default {
       setTimeout(() => {
         this.paypalMessage = ''
       }, 4000)
+    }
+  },
+  created () {
+    for (let paypalItems of this.cart) {
+      this.payPalCartPrice += paypalItems.price
+      this.getPayPalCart(paypalItems)
     }
   }
 }

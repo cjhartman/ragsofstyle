@@ -121,6 +121,7 @@ export default {
         color: item.color,
         size: item.size,
         price: item.price,
+        description: item.description,
         selectedFlickrImage: item.selectedFlickrImage,
         dateAdded: item.dateAdded,
         sale: item.sale,

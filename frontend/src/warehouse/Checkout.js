@@ -1,5 +1,3 @@
-import { startSession } from "mongoose"
-
 const getDefaultCartState = () => {
   return {
     cart: [],
@@ -44,16 +42,16 @@ const actions = {
 
   // get the items in the cart
   getPayPalCart ({
-    state,
     commit
-  }) {
+  }, cartItem) {
     let paypalCart = {
-      name: state.cart.title.toString(),
-      descriptions: state.cart.descriptions.toString(),
-      quantity: "1",
-      price: state.cart.price.toString(),
-      currency: "USD"
+      name: cartItem.title.toString(),
+      descriptions: cartItem.description.toString(),
+      quantity: '1',
+      price: cartItem.price.toString(),
+      currency: 'USD'
     }
+    console.log(paypalCart)
     commit('create_paypal_checkout_item', paypalCart)
   },
 
