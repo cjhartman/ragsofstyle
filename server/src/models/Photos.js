@@ -52,6 +52,10 @@ const PhotoSchema = new Schema({
     secret: {
         type: Array,
         required: true
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
     }
 });
 
