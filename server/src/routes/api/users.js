@@ -5,6 +5,10 @@ const jwt = require('jsonwebtoken');
 const key = require('../../config/keys').secret;
 const passport = require('passport');
 const User = require('../../models/Users');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+const async = require('async');
+const xoauth2 = require('xoauth2');
 
 /** 
 * @route POST api/route/register
@@ -13,12 +17,12 @@ const User = require('../../models/Users');
 */
 
 router.post('/register', (req, res) => {
-    let { 
-        name, 
-        username, 
-        email, 
-        password, 
-        confirm_password 
+    let {
+        name,
+        username,
+        email,
+        password,
+        confirm_password
     } = req.body
     // Check passwords match
     if (password !== confirm_password) {
@@ -28,7 +32,7 @@ router.post('/register', (req, res) => {
     }
 
     // Check for a unique email
-    User.findOne({username: username}).then(user => {
+    User.findOne({ username: username }).then(user => {
         if (user) {
             return res.status(400).json({
                 msg: "Username is already taken"
@@ -36,7 +40,7 @@ router.post('/register', (req, res) => {
         }
     });
 
-    User.findOne({email: email}).then(user => {
+    User.findOne({ email: email }).then(user => {
         if (user) {
             return res.status(400).json({
                 msg: "Email is already in use, contact system admin or maybe try a different password"
@@ -113,13 +117,68 @@ router.post('/login', (req, res) => {
     })
 });
 
+/**
+ * @route POST api/route/reset-password
+ * @desc Reset users PW
+ * @access Public
+ */
+
+router.post('/forgot-password', (req, res, next) => {
+    async.waterfall([
+        function (done) {
+            crypto.randomBytes(20, function (err, buf) {
+                let token = buf.toString('hex');
+                done(err, token);
+            });
+        },
+        function (token, done) {
+            User.findOne({ email: req.body.email }, function (err, user) {
+                if (!user) {
+                    req.flash('error', 'No account with that email address exists.');
+                    return res.redirect('/reset-pw');
+                }
+
+                user.resetPasswordToken = token;
+                user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+                user.save(function (err) {
+                    done(err, token, user);
+                });
+            });
+        },
+        function (token, user, done) {
+            let smtpTransport = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'cieje0417@gmail.com',
+                    pass: 'Iw1l!N0TLuz3'
+                }
+            });
+            let mailOptions = {
+                to: user.email,
+                from: 'passwordreset@demo.com',
+                subject: 'Password Reset',
+                text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+                    'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                    'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+                    'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+            };
+            smtpTransport.sendMail(mailOptions, function (err) {
+                done(err, 'done');
+            });
+        }
+    ], function (err) {
+        if (err) return next(err);
+        res.redirect('/forgot');
+    });
+})
 
 /**
  * @route GET api/users/profile
  * @desc Return the User's data
  * @access Private
  */
-router.get('/profile', passport.authenticate('jwt', { 
+router.get('/profile', passport.authenticate('jwt', {
     session: false
 }), (req, res) => {
     return res.json({
