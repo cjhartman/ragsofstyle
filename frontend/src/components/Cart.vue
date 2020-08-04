@@ -3,6 +3,7 @@
     <div class="no-items-in-cart" v-if="!cart.length">
       <h1>You dont have any items in your cart... yet.</h1>
       <p>Let's get you back to shopping.</p>
+      <button @click="resetCartState">Reset State</button>
       <div class="secondary-button-container">
         <router-link class="secondary-button-btn" to="/home" tag="button">Click me to go home</router-link>
       </div>
@@ -30,6 +31,7 @@
         </div>
       </div>
       <div class="cart-total">
+        <button @click="resetCartState">Reset State</button>
         <p>
           <span>SUB-TOTAL</span>
           <span>${{ cartPrice }}</span>
@@ -49,7 +51,7 @@
           currency="USD"
           :client="paypal"
           :button-style="myStyle"
-          :items="[paypalCheckoutItem]"
+          :items="itemsInCart"
           env="sandbox"
           @payment-completed="payment_completed_cb"
           @payment-cancelled="payment_cancelled_cb">
@@ -69,7 +71,7 @@ export default {
       cartImg: '',
       payPalCartPrice: '',
       paypal: {
-        sandbox: 'ASg_2GUBjGIyaMFQ1xIWhyhEvfJhYBqdluq5odsldEChwiPRWn8dTU2S34JCVNJZ3rTaz2s_6_1arcrb',
+        sandbox: 'AcVfPJEHzNLfWdF21ahdFxRhpj1dkvCGLYjGQPZ9tThL0bRuq0TlpPxVtQbFxFpfhh4F-fIhYc4_Ua_k',
         production: '<production client id>'
       },
       myStyle: {
@@ -101,6 +103,7 @@ export default {
       this.removeFromCart(id)
     },
     payment_completed_cb (res, planName) {
+      console.log(res)
       this.$router.push('/thank-you')
       this.resetCartState()
       setTimeout(() => {
@@ -114,9 +117,23 @@ export default {
     }
   },
   created () {
+    let totalPayPayPrice = 0
     for (let paypalItems of this.cart) {
-      this.payPalCartPrice += paypalItems.price
-      this.getPayPalCart(paypalItems)
+      // assign items in cart to paypal specific attrs
+      let paypalCart = {
+        name: paypalItems.title.toString(),
+        description: paypalItems.description.toString(),
+        quantity: '1',
+        price: paypalItems.price.toString(),
+        currency: 'USD'
+      }
+      this.itemsInCart.push(paypalCart)
+
+      // set the amount for paypal
+      totalPayPayPrice += parseInt(paypalItems.price)
+      this.payPalCartPrice = totalPayPayPrice.toString()
+
+      this.getPayPalCart(paypalCart)
     }
   }
 }

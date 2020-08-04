@@ -8,7 +8,9 @@ const User = require('../../models/Users');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const async = require('async');
-const xoauth2 = require('xoauth2');
+
+const maxLoginAttempts = 5;
+const maxEmailAttempts = 5;
 
 /** 
 * @route POST api/route/register
@@ -98,7 +100,7 @@ router.post('/login', (req, res) => {
                 }
                 // We need to sign off the jwt
                 jwt.sign(payload, key, {
-                    expiresIn: 604800
+                    expiresIn: 7200000
                 }, (err, token) => {
                     res.status(200).json({
                         success: true,
@@ -134,8 +136,7 @@ router.post('/forgot-password', (req, res, next) => {
         function (token, done) {
             User.findOne({ email: req.body.email }, function (err, user) {
                 if (!user) {
-                    req.flash('error', 'No account with that email address exists.');
-                    return res.redirect('/reset-pw');
+                    return res.sendStatus(401)
                 }
 
                 user.resetPasswordToken = token;
@@ -150,17 +151,17 @@ router.post('/forgot-password', (req, res, next) => {
             let smtpTransport = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
-                    user: 'cieje0417@gmail.com',
-                    pass: 'Iw1l!N0TLuz3'
+                    user: 'rosdevsupp@gmail.com',
+                    pass: 'Tr0p9v$R@gS'
                 }
             });
             let mailOptions = {
                 to: user.email,
-                from: 'passwordreset@demo.com',
+                from: 'rosdevsupp@gmail.com',
                 subject: 'Password Reset',
                 text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
                     'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                    'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+                    'http://localhost:8080' + '/reset/' + token + '\n\n' +
                     'If you did not request this, please ignore this email and your password will remain unchanged.\n'
             };
             smtpTransport.sendMail(mailOptions, function (err) {
@@ -169,9 +170,28 @@ router.post('/forgot-password', (req, res, next) => {
         }
     ], function (err) {
         if (err) return next(err);
-        res.redirect('/forgot');
+        res.status(200).json({
+            msg: 'Found user',
+            success: true
+        })
     });
 })
+
+router.get('/reset/:token', (req, res) => {
+    console.log('were here')
+    User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function (err, user) {
+        if (!user) {
+            return res.status(404).json({
+                msg: 'Not a proper email',
+                success: false
+            });
+        }
+        return res.status(200).json({
+            msg: 'successfully got the reset page',
+            success: true
+        });
+    });
+});
 
 /**
  * @route GET api/users/profile

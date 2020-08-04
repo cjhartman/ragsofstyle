@@ -61,6 +61,24 @@ const router = new Router({
       name: 'Thank You',
       component: () => import('../components/ThankYou.vue')
     },
+    {
+      path: '/forgot',
+      name: 'Forgot',
+      component: () => import('../components/Forgot.vue'),
+      meta: {
+        requiresGuest: true,
+        hideNavigation: true
+      }
+    },
+    {
+      path: '/reset/:token',
+      name: 'Reset',
+      component: () => import('../components/Reset.vue'),
+      meta: {
+        requiresGuest: true,
+        hideNavigation: true
+      }
+    },
     // No route here, get lost bozo
     {
       path: '*',

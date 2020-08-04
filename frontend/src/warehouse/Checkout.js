@@ -44,15 +44,7 @@ const actions = {
   getPayPalCart ({
     commit
   }, cartItem) {
-    let paypalCart = {
-      name: cartItem.title.toString(),
-      descriptions: cartItem.description.toString(),
-      quantity: '1',
-      price: cartItem.price.toString(),
-      currency: 'USD'
-    }
-    console.log(paypalCart)
-    commit('create_paypal_checkout_item', paypalCart)
+    commit('create_paypal_checkout_item', cartItem)
   },
 
   // removes the items from the cart based on id
@@ -88,7 +80,7 @@ const mutations = {
     state.cartLength--
   },
   create_paypal_checkout_item (state, checkoutItem) {
-    state.paypalCheckoutItem = checkoutItem
+    state.paypalCheckoutItem = (checkoutItem)
   },
   reset_state (state) {
     Object.assign(state, getDefaultCartState())

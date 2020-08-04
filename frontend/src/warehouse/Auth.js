@@ -1,6 +1,14 @@
 import axios from 'axios'
 import router from '../router'
 
+const getDefaultAuthState = () => {
+  return {
+    token: localStorage.getItem('token') || '',
+    user: {},
+    status: ''
+  }
+}
+
 const state = {
   token: localStorage.getItem('token') || '',
   user: {},
@@ -15,6 +23,7 @@ const getters = {
 
 const actions = {
   async login ({
+    state,
     commit
   }, user) {
     commit('auth_request')
@@ -61,6 +70,35 @@ const actions = {
     commit('logout')
     delete axios.defaults.headers.common['Authorization']
     router.push('/login')
+  },
+
+  // find user in order to reset pw
+  async findUserForPWReset ({
+    commit
+  }, email) {
+    commit('email_request')
+    let res = await axios.post('https://localhost:3000/api/users/forgot-password', email)
+    if (res.status === 200) {
+      return res
+    }
+  },
+
+  async emailAcceptedForPWReset ({
+    commit
+  }, token) {
+    commit('reset_request')
+    let res = await axios.get('https://localhost:3000/api/users/reset/' + token)
+    console.log(res)
+    if (res.status.success) {
+      return res
+    }
+  },
+
+  // reset state
+  resetState ({
+    commit
+  }) {
+    commit('reset_state')
   }
 }
 
@@ -85,10 +123,19 @@ const mutations = {
   admin_profile (state, user) {
     state.user = user
   },
+  email_request (state) {
+    state.status = 'loading'
+  },
   logout (state) {
     state.status = ''
     state.token = ''
     state.user = ''
+  },
+  reset_request (state) {
+    state.status = 'loading'
+  },
+  reset_state (state) {
+    Object.assign(state, getDefaultAuthState())
   }
 }
 
