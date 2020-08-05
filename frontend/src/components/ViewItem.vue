@@ -24,9 +24,10 @@
           <span class="view-item-size">Size:</span>
           <span class="view-item-size-content">{{ sellingImage.size }}</span>
         </p>
-        <div class="secondary-button-container">
-          <button class="secondary-button-btn" v-bind:class="{ 'disabled': isItemAddedToCart }" @click="addItemToCart(sellingImage)" :disabled="isItemAddedToCart">{{ cartBtnText }}</button>
+        <div class="secondary-button-container" v-if="isItemAddedToCart">
+          <button class="secondary-button-btn" @click="addItemToCart(sellingImage)">Add to cart</button>
         </div>
+        <p></p>
         <p class="view-item-processed">*All payments processed through Paypal</p>
         <p class="view-item-desc">Description:</p>
         <p class="view-item-desc-content">{{ sellingImage.description }}</p>
@@ -36,6 +37,7 @@
             <p class="view-item-extras-content">- {{ detail.value }}</p>
           </li>
         </ul>
+        <button @click="resetCartState()"></button>
       </div>
     </section>
     <MayLike></MayLike>
@@ -60,8 +62,7 @@ export default {
       flickerItems: [],
       largeImg: '',
       id: 0,
-      isItemAddedToCart: false,
-      cartBtnText: 'Add to cart'
+      isItemAddedToCart: true
     }
   },
   computed: {
@@ -70,7 +71,8 @@ export default {
   methods: {
     ...mapActions([
       'getItem',
-      'addToCart'
+      'addToCart',
+      'resetCartState'
     ]),
     search () {
       this.loading = true
@@ -132,19 +134,11 @@ export default {
       }
       this.addToCart(cartItem).then(res => {
         if (res) {
-          this.isItemAlreadyInCart()
+          
         }
       }).catch(err => {
         console.log(err)
       })
-    },
-    isItemAlreadyInCart () {
-      for (let item of this.cart) {
-        if (item._id === this.sellingImage._id) {
-          this.isItemAddedToCart = true
-          this.cartBtnText = 'Item is in your cart'
-        }
-      }
     }
   },
   created () {

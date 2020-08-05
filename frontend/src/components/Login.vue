@@ -62,7 +62,9 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err)
+          if (err.response && err.response.status === 404) {
+            console.log(err.response)
+          }
         })
     }
   }

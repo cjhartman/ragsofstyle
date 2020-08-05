@@ -90,6 +90,7 @@ router.post('/login', (req, res) => {
         }
         // If user found, then check pw
         bcrypt.compare(req.body.password, user.password).then(isMatching => {
+            console.log(bcrypt.getSalt(user.password))
             if (isMatching) {
                 // User pw is correct
                 const payload = {
@@ -178,7 +179,6 @@ router.post('/forgot-password', (req, res, next) => {
 })
 
 router.get('/reset/:token', (req, res) => {
-    console.log('were here')
     User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function (err, user) {
         if (!user) {
             return res.status(404).json({
@@ -187,10 +187,72 @@ router.get('/reset/:token', (req, res) => {
             });
         }
         return res.status(200).json({
-            msg: 'successfully got the reset page',
+            msg: 'Successfully got the reset page',
             success: true
         });
     });
+});
+
+router.post('/reset/:token', (req, res) => {
+    // Check passwords match
+    let = {
+        password,
+        confirmPw
+    } = req.body
+    if (password !== confirmPw) {
+        return res.status(400).json({
+            msg: "Your passwords don't match"
+        });
+    }
+    async.waterfall([
+        function (done) {
+            User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, (err, user) => {
+                if (!user) {
+                    return res.status(404).json({
+                        msg: 'Password reset is no work. Maybe time no thing no mo',
+                        success: false
+                    });
+                }
+
+                // Hash password
+                bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(password, salt, (err, hash) => {
+                        if (err) throw err;
+                        user.password = hash;
+                        user.resetPasswordToken = undefined;
+                        user.resetPasswordExpires = undefined;
+                        user.save((err) => {
+                            done(err, user);
+                        })
+                    })
+                })
+            });
+        },
+        function (user, done) {
+            let smtpTransport = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'rosdevsupp@gmail.com',
+                    pass: 'Tr0p9v$R@gS'
+                }
+            });
+            let mailOptions = {
+                to: user.email,
+                from: 'rosdevsupp@gmail.com',
+                subject: 'Password Reset Success',
+                text: 'This is just an email saying that your password has been updated, now go forth my young star fighter.\n\n'
+            };
+            smtpTransport.sendMail(mailOptions, function (err) {
+                done(err, 'done');
+            });
+        }
+    ], function (err) {
+        if (err) return next(err);
+    });
+    res.status(200).json({
+        msg: 'We gucci mane',
+        success: true
+    })
 });
 
 /**

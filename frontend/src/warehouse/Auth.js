@@ -23,11 +23,11 @@ const getters = {
 
 const actions = {
   async login ({
-    state,
     commit
   }, user) {
     commit('auth_request')
     let res = await axios.post('https://localhost:3000/api/users/login', user)
+    console.log(res)
     if (res.data.success) {
       const token = res.data.token
       const user = res.data.user
@@ -88,9 +88,18 @@ const actions = {
   }, token) {
     commit('reset_request')
     let res = await axios.get('https://localhost:3000/api/users/reset/' + token)
-    console.log(res)
     if (res.status.success) {
       return res
+    }
+  },
+
+  async changePassword ({
+    commit
+  }, newPw) {
+    commit('newpw_request')
+    let res = await axios.post('https://localhost:3000/api/users/reset/' + newPw.token, newPw)
+    if (res.data.success) {
+      router.push('/login')
     }
   },
 
@@ -132,6 +141,9 @@ const mutations = {
     state.user = ''
   },
   reset_request (state) {
+    state.status = 'loading'
+  },
+  newpw_request (state) {
     state.status = 'loading'
   },
   reset_state (state) {
