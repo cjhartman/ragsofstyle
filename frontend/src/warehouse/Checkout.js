@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 const getDefaultCartState = () => {
   return {
     cart: [],
@@ -34,8 +36,14 @@ const actions = {
 
   // adds item to cart
   addToCart ({
+    state,
     commit
   }, product) {
+    for (let cart of state.cart) {
+      if (cart._id === product._id) {
+        return true
+      }
+    }
     commit('add_to_cart', product)
     return product._id
   },
@@ -54,6 +62,15 @@ const actions = {
   }, id) {
     commit('remove_from_cart', id)
     return true
+  },
+
+  async sdDeezNuts ({
+    state
+  }) {
+    let res = await axios.put('https://localhost:3000/api/photos/sdItems', state.cart)
+    if (res.status.success) {
+      console.log('poop')
+    }
   },
 
   resetState ({

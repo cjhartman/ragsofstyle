@@ -128,9 +128,7 @@ export default {
       ul {
         justify-content: left;
         li {
-          &:not(:first-of-type) {
-              padding-left: 50px;
-            }
+          margin-right: 50px;
 
           img {
             max-width: 350px;

@@ -241,11 +241,8 @@ export default {
           flex-flow: wrap;
 
           li {
-            padding-top: 20px;
-
-            &:not(:first-of-type) {
-              padding-left: 50px;
-            }
+            margin-top: 20px;
+            margin-right: 50px;
 
             .item-title-price {
               display: flex;

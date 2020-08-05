@@ -24,10 +24,10 @@
           <span class="view-item-size">Size:</span>
           <span class="view-item-size-content">{{ sellingImage.size }}</span>
         </p>
-        <div class="secondary-button-container" v-if="isItemAddedToCart">
+        <div class="secondary-button-container">
           <button class="secondary-button-btn" @click="addItemToCart(sellingImage)">Add to cart</button>
         </div>
-        <p></p>
+        <p class="item-exists" v-if="itemIsInCart">Item is in your cart</p>
         <p class="view-item-processed">*All payments processed through Paypal</p>
         <p class="view-item-desc">Description:</p>
         <p class="view-item-desc-content">{{ sellingImage.description }}</p>
@@ -37,7 +37,6 @@
             <p class="view-item-extras-content">- {{ detail.value }}</p>
           </li>
         </ul>
-        <button @click="resetCartState()"></button>
       </div>
     </section>
     <MayLike></MayLike>
@@ -62,7 +61,7 @@ export default {
       flickerItems: [],
       largeImg: '',
       id: 0,
-      isItemAddedToCart: true
+      itemIsInCart: false
     }
   },
   computed: {
@@ -71,8 +70,7 @@ export default {
   methods: {
     ...mapActions([
       'getItem',
-      'addToCart',
-      'resetCartState'
+      'addToCart'
     ]),
     search () {
       this.loading = true
@@ -134,7 +132,7 @@ export default {
       }
       this.addToCart(cartItem).then(res => {
         if (res) {
-          
+          this.itemIsInCart = true
         }
       }).catch(err => {
         console.log(err)
@@ -148,9 +146,6 @@ export default {
   beforeMount () {
     this.fetchImages()
     this.scrollTop()
-  },
-  beforeUpdate () {
-    this.isItemAlreadyInCart()
   }
 }
 </script>
@@ -207,9 +202,8 @@ export default {
         margin: 0;
       }
 
-      .disabled {
-        background-color: #aaa;
-        border: 3px solid #aaa;
+      .item-exists {
+        color: #e6584c;
       }
     }
   }

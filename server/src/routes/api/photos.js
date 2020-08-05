@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const PhotoSchema = require('../../models/Photos')
+var ObjectID = require('mongodb').ObjectID;
 
 /**
  * @route Post api/route/upload
@@ -80,8 +81,28 @@ router.get('/items', (req, res) => {
  * @desc Updates the original item
  * @access Private
  */
-router.put('/upload/:id', (req, res) => {
+router.put('/upload/:id', (req, res) => {});
 
+/** 
+ * @route PUT api/photos/items/:id
+ * @desc Sets the items that have been sold as soft deleted
+ * @access Private
+ */
+
+router.put('/sdItems', (req, res) => {
+    let soldId = [];
+    for (let body of req.body) {
+        soldId.push(body._id);
+    }
+    PhotoSchema.find({}, (err, photos) => {
+        for (let photo of photos) {
+            soldId.filter((photoId) => {
+                if(photoId === photo._id.toString()) {
+                    PhotoSchema.updateOne({ "_id": ObjectID(photo._id.toString()) }, { $set: { "isDeleted" : true }})
+                }
+            })
+        }
+    })
 });
 
 /** 
@@ -101,6 +122,6 @@ router.delete('/delete/:id', (req, res) => {
             })
         }
     })
-})
+});
 
 module.exports = router;

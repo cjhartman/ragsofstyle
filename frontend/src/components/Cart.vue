@@ -3,7 +3,6 @@
     <div class="no-items-in-cart" v-if="!cart.length">
       <h1>You dont have any items in your cart... yet.</h1>
       <p>Let's get you back to shopping.</p>
-      <button @click="resetCartState">Reset State</button>
       <div class="secondary-button-container">
         <router-link class="secondary-button-btn" to="/home" tag="button">Click me to go home</router-link>
       </div>
@@ -30,8 +29,8 @@
           <p class="cart-item-container-price">${{ cart.price }}</p>
         </div>
       </div>
+      <button @click="sdDeezNuts">Check and remove items from db</button>
       <div class="cart-total">
-        <button @click="resetCartState">Reset State</button>
         <p>
           <span>SUB-TOTAL</span>
           <span>${{ cartPrice }}</span>
@@ -97,14 +96,15 @@ export default {
     ...mapActions([
       'removeFromCart',
       'resetCartState',
-      'getPayPalCart'
+      'getPayPalCart',
+      'sdDeezNuts'
     ]),
     removeItemFromCart (id) {
       this.removeFromCart(id)
     },
     payment_completed_cb (res, planName) {
-      console.log(res)
       this.$router.push('/thank-you')
+      this.sdDeezNuts()
       this.resetCartState()
       setTimeout(() => {
         this.paypalMessage = ''
