@@ -29,7 +29,6 @@
           <p class="cart-item-container-price">${{ cart.price }}</p>
         </div>
       </div>
-      <button @click="sdDeezNuts">Check and remove items from db</button>
       <div class="cart-total">
         <p>
           <span>SUB-TOTAL</span>

@@ -56,6 +56,10 @@ const PhotoSchema = new Schema({
     isDeleted: {
         type: Boolean,
         default: false
+    },
+    isInCart: {
+        type: Boolean,
+        default: false
     }
 });
 

@@ -35,16 +35,21 @@ const actions = {
   },
 
   // adds item to cart
-  addToCart ({
+  async addToCart ({
     state,
     commit
   }, product) {
-    for (let cart of state.cart) {
-      if (cart._id === product._id) {
-        return true
+    if (state.cart.length > 0) {
+      for (let cart of state.cart) {
+        if (cart._id === product._id) {
+          return true
+        }
       }
     }
-    commit('add_to_cart', product)
+    let res = await axios.put('https://localhost:3000/api/photos/item-in-cart/' + product._id)
+    if (res.data.success) {
+      commit('add_to_cart', product)
+    }
     return product._id
   },
 
@@ -60,16 +65,19 @@ const actions = {
   async removeFromCart ({
     commit
   }, id) {
-    commit('remove_from_cart', id)
+    let res = await axios.put('https://localhost:3000/api/photos/remove-item-in-cart/' + id)
+    if (res.data.success) {
+      commit('remove_from_cart', id)
+    }
     return true
   },
 
   async sdDeezNuts ({
     state
   }) {
-    let res = await axios.put('https://localhost:3000/api/photos/sdItems', state.cart)
-    if (res.status.success) {
-      console.log('poop')
+    let res = await axios.put('https://localhost:3000/api/photos/sd-items', state.cart)
+    if (res.data.success) {
+      return true
     }
   },
 

@@ -29,6 +29,17 @@ const actions = {
   }) {
     commit('item_request')
     let res = await axios.get('https://localhost:3000/api/photos/items')
+    commit('take_out_item_and_display', res.data.items)
+    // commit('item_content', res.data.items)
+    return res
+  },
+
+  // Get the image content
+  async getAdminItem ({
+    commit
+  }) {
+    commit('item_request')
+    let res = await axios.get('https://localhost:3000/api/photos/items')
     commit('item_content', res.data.items)
     return res
   },
@@ -69,6 +80,15 @@ const mutations = {
   },
   item_content (state, items) {
     state.items = items
+  },
+  take_out_item_and_display (state, items) {
+    let newState = []
+    for (let item of items) {
+      if (item.isDeleted === false && item.isInCart === false) {
+        newState.push(item)
+      }
+    }
+    state.items = newState
   },
   put_item (state) {
     state.status = 'loading'
