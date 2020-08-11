@@ -1,40 +1,42 @@
 <template>
-    <div class="container">
-        <section class="login-container">
-            <div class="login-header">
-                <h1>Welcome Back</h1>
-                <h4>Please login with your username & password</h4>
+  <div class="container">
+    <section class="login-container">
+      <div class="login-header">
+        <h1 class="main-headers">Welcome Back</h1>
+        <h4>Please login with your username & password</h4>
+      </div>
+      <div class="login-form">
+        <form @submit.prevent="loginUser">
+          <div class="form-group">
+            <div class="username-form">
+              <input
+                type="text"
+                placeholder="Username"
+                name="username"
+                v-model="username"
+                class="form"
+              />
             </div>
-            <div class="login-form">
-                <form @submit.prevent="loginUser">
-                    <div class=form-group>
-                        <div class="username-form">
-                            <input
-                                type="text"
-                                placeholder="Username"
-                                name="username"
-                                v-model="username"
-                                class="form"
-                            >
-                        </div>
-                        <div class="password-form">
-                            <input
-                                type="password"
-                                placeholder="Password"
-                                name="password"
-                                v-model="password"
-                                class="form"
-                            >
-                        </div>
-                        <div class="button-group">
-                            <a href="#" class="reset-link">Reset Password</a>
-                            <button type="submit" class="login-button">Login</button>
-                        </div>
-                    </div>
-                </form>
+            <div class="password-form">
+              <input
+                type="password"
+                placeholder="Password"
+                name="password"
+                v-model="password"
+                class="form"
+              />
             </div>
-        </section>
-    </div>
+            <div class="button-group">
+              <router-link class="reset-link" to="/forgot">Reset Password</router-link>
+              <div class="secondary-button-container">
+                <button type="submit" class="secondary-button-btn">Login</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script>
@@ -53,13 +55,17 @@ export default {
         username: this.username,
         password: this.password
       }
-      this.login(user).then(res => {
-        if (res.data.success) {
-          this.$router.push('/admin')
-        }
-      }).catch(err => {
-        console.log(err)
-      })
+      this.login(user)
+        .then((res) => {
+          if (res.data.success) {
+            this.$router.push('/admin')
+          }
+        })
+        .catch((err) => {
+          if (err.response && err.response.status === 404) {
+            console.log(err.response)
+          }
+        })
     }
   }
 }
@@ -67,66 +73,54 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #fec23b;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    .login-container {
-        .login-header {
-            margin-bottom: 35px;
+  .login-container {
+    .login-header {
+      margin-bottom: 35px;
+
+      .main-headers {
+        position: relative;
+
+        &:after {
+          content: "Welcome Back";
+          position: absolute;
+          top: 2px;
+          left: -2px;
+          color: #fec23b;
+          z-index: -1;
         }
-
-        .form-group {
-            display: inline-block;
-            width: 20rem;
-
-            .username-form {
-                margin-bottom: 10px;
-            }
-
-            .form {
-                width: 100%;
-                display: block;
-                text-align: left;
-                border-radius: 5px;
-                border: 1px solid gray;
-                padding: 10px;
-                outline: none;
-                font-size: 1rem;
-                background-color: transparent;
-                color: #f26f63;
-
-                &:focus {
-                    box-shadow: 0 0 5px #f26f63;
-                    padding: 10px;
-                    border: 1px solid #f26f63;
-                }
-            }
-        }
-        .button-group {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-
-            .login-button {
-                border-radius: 5px;
-                border: 1px solid gray;
-                background-color: transparent;
-                outline: none;
-                cursor: pointer;
-                padding: 7px;
-            }
-
-            .reset-link {
-                font-size: .9rem;
-                color: #f26f63;
-                text-decoration: none;
-                cursor: pointer;
-            }
-        }
+      }
     }
+
+    .form-group {
+      display: inline-block;
+      width: 20rem;
+
+      .username-form {
+        margin-bottom: 10px;
+      }
+    }
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+
+      .secondary-button-container {
+        width: 50%;
+      }
+
+      .reset-link {
+        font-size: 0.9rem;
+        color: #f26f63;
+        text-decoration: none;
+        cursor: pointer;
+      }
+    }
+  }
 }
 </style>

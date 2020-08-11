@@ -6,35 +6,84 @@ Vue.use(Router)
 
 const router = new Router({
   mode: 'history',
+  linkExactActiveClass: 'active',
   routes: [
     {
       path: '/home',
-      name: 'home',
+      alias: '/',
+      name: 'Home',
       component: () => import('../components/Home.vue')
     },
     {
       path: '/register',
-      name: 'register',
+      name: 'Register',
       component: () => import('../components/Register.vue'),
       meta: {
-        requiresGuest: true
+        requiresGuest: true,
+        hideNavigation: true
       }
     },
     {
       path: '/login',
-      name: 'login',
+      name: 'Login',
       component: () => import('../components/Login.vue'),
       meta: {
-        requiresGuest: true
+        requiresGuest: true,
+        hideNavigation: true
       }
     },
     {
       path: '/admin',
-      name: 'admin',
+      name: 'Admin',
       component: () => import('../components/Admin.vue'),
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        hideNavigation: true
       }
+    },
+    {
+      path: '/shop',
+      name: 'Shop',
+      component: () => import('../components/Shop.vue')
+    },
+    {
+      path: '/view-item/:id',
+      name: 'View Item',
+      component: () => import('../components/ViewItem.vue')
+    },
+    {
+      path: '/cart',
+      name: 'Cart',
+      component: () => import('../components/Cart.vue')
+    },
+    {
+      path: '/thank-you',
+      name: 'Thank You',
+      component: () => import('../components/ThankYou.vue')
+    },
+    {
+      path: '/forgot',
+      name: 'Forgot',
+      component: () => import('../components/Forgot.vue'),
+      meta: {
+        requiresGuest: true,
+        hideNavigation: true
+      }
+    },
+    {
+      path: '/reset/:token',
+      name: 'Reset',
+      component: () => import('../components/Reset.vue'),
+      meta: {
+        requiresGuest: true,
+        hideNavigation: true
+      }
+    },
+    // No route here, get lost bozo
+    {
+      path: '*',
+      name: '404',
+      component: () => import('../components/404.vue')
     }
   ]
 })

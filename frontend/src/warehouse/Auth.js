@@ -1,6 +1,14 @@
 import axios from 'axios'
 import router from '../router'
 
+const getDefaultAuthState = () => {
+  return {
+    token: localStorage.getItem('token') || '',
+    user: {},
+    status: ''
+  }
+}
+
 const state = {
   token: localStorage.getItem('token') || '',
   user: {},
@@ -19,6 +27,7 @@ const actions = {
   }, user) {
     commit('auth_request')
     let res = await axios.post('https://localhost:3000/api/users/login', user)
+    console.log(res)
     if (res.data.success) {
       const token = res.data.token
       const user = res.data.user
@@ -61,6 +70,44 @@ const actions = {
     commit('logout')
     delete axios.defaults.headers.common['Authorization']
     router.push('/login')
+  },
+
+  // find user in order to reset pw
+  async findUserForPWReset ({
+    commit
+  }, email) {
+    commit('email_request')
+    let res = await axios.post('https://localhost:3000/api/users/forgot-password', email)
+    if (res.status === 200) {
+      return res
+    }
+  },
+
+  async emailAcceptedForPWReset ({
+    commit
+  }, token) {
+    commit('reset_request')
+    let res = await axios.get('https://localhost:3000/api/users/reset/' + token)
+    if (res.status.success) {
+      return res
+    }
+  },
+
+  async changePassword ({
+    commit
+  }, newPw) {
+    commit('newpw_request')
+    let res = await axios.post('https://localhost:3000/api/users/reset/' + newPw.token, newPw)
+    if (res.data.success) {
+      router.push('/login')
+    }
+  },
+
+  // reset state
+  resetState ({
+    commit
+  }) {
+    commit('reset_state')
   }
 }
 
@@ -85,10 +132,22 @@ const mutations = {
   admin_profile (state, user) {
     state.user = user
   },
+  email_request (state) {
+    state.status = 'loading'
+  },
   logout (state) {
     state.status = ''
     state.token = ''
     state.user = ''
+  },
+  reset_request (state) {
+    state.status = 'loading'
+  },
+  newpw_request (state) {
+    state.status = 'loading'
+  },
+  reset_state (state) {
+    Object.assign(state, getDefaultAuthState())
   }
 }
 

@@ -5,6 +5,12 @@ const jwt = require('jsonwebtoken');
 const key = require('../../config/keys').secret;
 const passport = require('passport');
 const User = require('../../models/Users');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+const async = require('async');
+
+const maxLoginAttempts = 5;
+const maxEmailAttempts = 5;
 
 /** 
 * @route POST api/route/register
@@ -13,12 +19,12 @@ const User = require('../../models/Users');
 */
 
 router.post('/register', (req, res) => {
-    let { 
-        name, 
-        username, 
-        email, 
-        password, 
-        confirm_password 
+    let {
+        name,
+        username,
+        email,
+        password,
+        confirm_password
     } = req.body
     // Check passwords match
     if (password !== confirm_password) {
@@ -28,7 +34,7 @@ router.post('/register', (req, res) => {
     }
 
     // Check for a unique email
-    User.findOne({username: username}).then(user => {
+    User.findOne({ username: username }).then(user => {
         if (user) {
             return res.status(400).json({
                 msg: "Username is already taken"
@@ -36,7 +42,7 @@ router.post('/register', (req, res) => {
         }
     });
 
-    User.findOne({email: email}).then(user => {
+    User.findOne({ email: email }).then(user => {
         if (user) {
             return res.status(400).json({
                 msg: "Email is already in use, contact system admin or maybe try a different password"
@@ -84,6 +90,7 @@ router.post('/login', (req, res) => {
         }
         // If user found, then check pw
         bcrypt.compare(req.body.password, user.password).then(isMatching => {
+            console.log(bcrypt.getSalt(user.password))
             if (isMatching) {
                 // User pw is correct
                 const payload = {
@@ -94,7 +101,7 @@ router.post('/login', (req, res) => {
                 }
                 // We need to sign off the jwt
                 jwt.sign(payload, key, {
-                    expiresIn: 604800
+                    expiresIn: 7200000
                 }, (err, token) => {
                     res.status(200).json({
                         success: true,
@@ -113,13 +120,147 @@ router.post('/login', (req, res) => {
     })
 });
 
+/**
+ * @route POST api/route/reset-password
+ * @desc Reset users PW
+ * @access Public
+ */
+
+router.post('/forgot-password', (req, res, next) => {
+    async.waterfall([
+        function (done) {
+            crypto.randomBytes(20, function (err, buf) {
+                let token = buf.toString('hex');
+                done(err, token);
+            });
+        },
+        function (token, done) {
+            User.findOne({ email: req.body.email }, function (err, user) {
+                if (!user) {
+                    return res.sendStatus(401)
+                }
+
+                user.resetPasswordToken = token;
+                user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+                user.save(function (err) {
+                    done(err, token, user);
+                });
+            });
+        },
+        function (token, user, done) {
+            let smtpTransport = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'rosdevsupp@gmail.com',
+                    pass: 'Tr0p9v$R@gS'
+                }
+            });
+            let mailOptions = {
+                to: user.email,
+                from: 'rosdevsupp@gmail.com',
+                subject: 'Password Reset',
+                text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+                    'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                    'http://localhost:8080' + '/reset/' + token + '\n\n' +
+                    'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+            };
+            smtpTransport.sendMail(mailOptions, function (err) {
+                done(err, 'done');
+            });
+        }
+    ], function (err) {
+        if (err) return next(err);
+        res.status(200).json({
+            msg: 'Found user',
+            success: true
+        })
+    });
+})
+
+router.get('/reset/:token', (req, res) => {
+    User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function (err, user) {
+        if (!user) {
+            return res.status(404).json({
+                msg: 'Not a proper email',
+                success: false
+            });
+        }
+        return res.status(200).json({
+            msg: 'Successfully got the reset page',
+            success: true
+        });
+    });
+});
+
+router.post('/reset/:token', (req, res) => {
+    // Check passwords match
+    let = {
+        password,
+        confirmPw
+    } = req.body
+    if (password !== confirmPw) {
+        return res.status(400).json({
+            msg: "Your passwords don't match"
+        });
+    }
+    async.waterfall([
+        function (done) {
+            User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, (err, user) => {
+                if (!user) {
+                    return res.status(404).json({
+                        msg: 'Password reset is no work. Maybe time no thing no mo',
+                        success: false
+                    });
+                }
+
+                // Hash password
+                bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(password, salt, (err, hash) => {
+                        if (err) throw err;
+                        user.password = hash;
+                        user.resetPasswordToken = undefined;
+                        user.resetPasswordExpires = undefined;
+                        user.save((err) => {
+                            done(err, user);
+                        })
+                    })
+                })
+            });
+        },
+        function (user, done) {
+            let smtpTransport = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'rosdevsupp@gmail.com',
+                    pass: 'Tr0p9v$R@gS'
+                }
+            });
+            let mailOptions = {
+                to: user.email,
+                from: 'rosdevsupp@gmail.com',
+                subject: 'Password Reset Success',
+                text: 'This is just an email saying that your password has been updated, now go forth my young star fighter.\n\n'
+            };
+            smtpTransport.sendMail(mailOptions, function (err) {
+                done(err, 'done');
+            });
+        }
+    ], function (err) {
+        if (err) return next(err);
+    });
+    res.status(200).json({
+        msg: 'We gucci mane',
+        success: true
+    })
+});
 
 /**
  * @route GET api/users/profile
  * @desc Return the User's data
- * @acces Private
+ * @access Private
  */
-router.get('/profile', passport.authenticate('jwt', { 
+router.get('/profile', passport.authenticate('jwt', {
     session: false
 }), (req, res) => {
     return res.json({
